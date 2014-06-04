@@ -64,10 +64,14 @@ module.exports = function(passport) {
 
           // set all of the facebook information in our user model
           newUser.userID = profile.id;
-          newUser.fbToken = token;
           newUser.email = profile.emails[0].value;
+          newUser.fbToken = token;
           newUser.firstName = profile.name.givenName
           newUser.lastName = profile.name.familyName;
+          newUser.picture = "https://graph.facebook.com/" + profile.id +
+                              "/picture?type=large" + "&access_token=" + token;
+          newUser.friends = [];
+          newUser.albums = [];
 
           // save our user to the database
           newUser.save(function(err) {

@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-	<title>Node Authentication</title>
+	<title>Mojave Server</title>
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
 	<style>
@@ -12,7 +12,7 @@
 <div class="container">
 
 	<div class="page-header text-center">
-		<h1><span class="fa fa-user"></span> Profile Page</h1>
+		<h1><span class="fa fa-user"></span> Profile</h1>
 	</div>
 
 	<div class="row">
@@ -25,12 +25,18 @@
 					<a href="/logout" class="btn btn-default btn-sm">Logout</a>
 				</h3>
 
+				<img src= <%= user.picture %> />
+
 				<p>
 					<strong>userID</strong>: <%= user.userID %><br>
 					<strong>email</strong>: <%= user.email %><br>
-					<strong>fbToken</strong>: <%= user.fbToken %><br>
+					<!-- <strong>fbToken</strong>: <%= user.fbToken %><br> -->
 					<strong>firstName</strong>: <%= user.firstName %><br>
-					<strong>lastName</strong>: <%= user.lastName %>
+					<strong>lastName</strong>: <%= user.lastName %><br>
+					<strong>friends</strong>: <%= user.friends %><br>
+					<strong>albums</strong>: <%= user.albums %><br>
+					<strong>currentAlbum</strong>: <%= user.currentAlbum %><br>
+					<strong>appPrefs</strong>: <%= user.appPrefs %>
 				</p>
 			</div>
 		</div>
