@@ -1,4 +1,3 @@
-// app/routes.js
 module.exports = function(app, passport) {
 
 	// =====================================
@@ -7,6 +6,20 @@ module.exports = function(app, passport) {
 	app.get('/', function(req, res) {
 		res.render('index.ejs'); // load the index.ejs file
 	});
+
+	// =====================================
+	// FACEBOOK ROUTES =====================
+	// =====================================
+	// route for facebook authentication and login
+	// modify 'scope' for more permissions
+	app.get('/auth/facebook', passport.authenticate('facebook', { scope : 'email' }));
+
+	// handle the callback after facebook has authenticated the user
+	app.get('/auth/facebook/callback',
+		passport.authenticate('facebook', {
+			successRedirect : '/profile',
+			failureRedirect : '/'
+		}));
 
 	// =====================================
 	// LOGIN ===============================
