@@ -23,7 +23,7 @@ app.configure(function() {
 	app.set('view engine', 'ejs'); // set up ejs for templating
 
 	// required for passport
-	app.use(express.session({ secret: 'mobisecretkey' })); // session secret
+	app.use(express.session({ secret: 'mojavesecretkey' })); // session secret
 	app.use(passport.initialize());
 	app.use(passport.session()); // persistent login sessions
 	app.use(flash()); // use connect-flash for flash messages stored in session
@@ -36,4 +36,4 @@ require('./app/routes.js')(app, passport);
 
 // Launch ======================================================================
 app.listen(port);
-console.log('The magic happens on port ' + port);
+console.log('Mojave Server is ready on port ' + port);
