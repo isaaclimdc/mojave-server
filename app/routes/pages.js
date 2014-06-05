@@ -14,6 +14,15 @@ module.exports = function(app, passport) {
 		}
 	});
 
+	// Authentication: Facebook login
+	app.get('/auth/facebook',
+					passport.authenticate('facebook', { scope : 'email' }));
+	app.get('/auth/facebook/callback',
+		passport.authenticate('facebook', {
+			successRedirect : '/albums',
+			failureRedirect : '/'
+		}));
+
 	// Albums
 	app.get('/albums', isLoggedIn, function(req, res) {
 		res.render('albums.ejs', {
