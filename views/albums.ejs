@@ -4,6 +4,9 @@
 	<title>Mojave Web</title>
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+	<style>
+		.albumCell { padding: 20px; }
+	</style>
 </head>
 <body>
 	<nav class="navbar navbar-default" role="navigation">
@@ -22,8 +25,8 @@
 	    <!-- Collect the nav links, forms, and other content for toggling -->
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	      <ul class="nav navbar-nav">
-	        <li class="active"><a href="#"><span class="fa fa-picture-o"> Albums</a></li>
-	        <li><a href="/profile"><span class="fa fa-user"> Profile</a></li>
+	        <li class="active"><a href="#"><span class="fa fa-picture-o"></span> Albums</a></li>
+	        <li><a href="/profile"><span class="fa fa-user"></span> Profile</a></li>
 	      </ul>
 	      <ul class="nav navbar-nav navbar-right">
 	        <li><a href="/logout"><span class="fa fa-sign-out"></span> Logout</a></li>
@@ -34,14 +37,17 @@
 
 	<div class="container">
 
-		<div class="page-header text-center">
-			<h1>Albums</h1>
+		<div class="page-header">
+			<h1><span class="fa fa-picture-o"></span> Albums</h1>
 		</div>
 
 		<div class="row">
-			<div class="col-sm-6">
-				Hello
-			</div>
+			<button type="button" class="btn btn-default"><span class="fa fa-plus"></span> New Album</button>
+		</div>
+		<div class="row">
+		<% user.albums.forEach(function (albumID) { %>
+		  <div class="col-md-4 albumCell"><img src="http://lorempixel.com/200/200/"></div>
+		<% }); %>
 		</div>
 
 	</div>

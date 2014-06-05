@@ -23,8 +23,8 @@
 	    <!-- Collect the nav links, forms, and other content for toggling -->
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	      <ul class="nav navbar-nav">
-	        <li><a href="/albums"><span class="fa fa-picture-o"> Albums</a></li>
-	        <li class="active"><a href="#"><span class="fa fa-user"> Profile</a></li>
+	        <li><a href="/albums"><span class="fa fa-picture-o"></span> Albums</a></li>
+	        <li class="active"><a href="#"><span class="fa fa-user"></span> Profile</a></li>
 	      </ul>
 	      <ul class="nav navbar-nav navbar-right">
 	        <li><a href="/logout"><span class="fa fa-sign-out"></span> Logout</a></li>
@@ -35,8 +35,8 @@
 
 <div class="container">
 
-	<div class="page-header text-center">
-		<h1>Profile</h1>
+	<div class="page-header">
+		<h1><span class="fa fa-user"></span> Profile</h1>
 	</div>
 
 	<div class="row">
@@ -45,9 +45,7 @@
 		<div class="col-sm-6">
 			<div class="well">
 				<h3>
-					<span class="fa fa-user"></span>
 					<%= user.firstName %> <%= user.lastName %>
-
 				</h3>
 
 				<img src= <%= user.picture %> />
