@@ -1,11 +1,11 @@
 module.exports = function(app, passport) {
 
 	// =====================================
-	// HOME PAGE (with login links) ========
+	// HOME (with login) ===================
 	// =====================================
 	app.get('/', function(req, res) {
 		if (req.isAuthenticated()) {
-			res.redirect('/profile');
+			res.redirect('/albums');
 		}
 		else {
 			res.render('index.ejs');
@@ -13,25 +13,32 @@ module.exports = function(app, passport) {
 	});
 
 	// =====================================
-	// FACEBOOK LOGIN=======================
+	// FACEBOOK LOGIN ======================
 	// =====================================
 	// route for facebook authentication and login
-	// modify 'scope' for more permissions
 	app.get('/auth/facebook',
 					passport.authenticate('facebook', { scope : 'email' }));
 
 	// handle the callback after facebook has authenticated the user
 	app.get('/auth/facebook/callback',
 		passport.authenticate('facebook', {
-			successRedirect : '/profile',
+			successRedirect : '/albums',
 			failureRedirect : '/'
 		}));
 
 	// =====================================
-	// PROFILE SECTION =====================
+	// ALBUMS ==============================
+	// =====================================
+	app.get('/albums', isLoggedIn, function(req, res) {
+		res.render('albums.ejs', {
+			user : req.user // get the user out of session and pass to template
+		});
+	});
+
+	// =====================================
+	// PROFILE =============================
 	// =====================================
 	// we will want this protected so you have to be logged in to visit
-	// we will use route middleware to verify this (the isLoggedIn function)
 	app.get('/profile', isLoggedIn, function(req, res) {
 		res.render('profile.ejs', {
 			user : req.user // get the user out of session and pass to template
@@ -47,13 +54,11 @@ module.exports = function(app, passport) {
 	});
 };
 
-// route middleware to make sure
 function isLoggedIn(req, res, next) {
-
 	// if user is authenticated in the session, carry on
 	if (req.isAuthenticated())
 		return next();
 
-	// if they aren't redirect them to the home page
+	// if they aren't, redirect them to home
 	res.redirect('/');
 }

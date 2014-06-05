@@ -1,18 +1,17 @@
 <!doctype html>
 <html>
 <head>
-	<title>Mojave Server</title>
+	<title>Mojave Web</title>
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-	<style>
-		body { word-wrap: break-word; }
-	</style>
 </head>
 <body>
 <div class="container">
+	<a href="/logout" class="btn btn-default btn-sm" style="float: right; margin-top:10px;">Logout</a>
 
 	<div class="page-header text-center">
-		<h1><span class="fa fa-user"></span> Profile</h1>
+		<h1>Profile</h1>
+		<h4><a href="/albums">Albums</a></h4>
 	</div>
 
 	<div class="row">
@@ -21,8 +20,9 @@
 		<div class="col-sm-6">
 			<div class="well">
 				<h3>
+					<span class="fa fa-user"></span>
 					<%= user.firstName %> <%= user.lastName %>
-					<a href="/logout" class="btn btn-default btn-sm">Logout</a>
+
 				</h3>
 
 				<img src= <%= user.picture %> />
