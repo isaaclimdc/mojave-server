@@ -4,6 +4,10 @@
 
 var BUCKET_NAME = 'b1.mojavebucket';
 
+var User = require('../models/userModel');
+var Album = require('../models/albumModel');
+var Asset = require('../models/assetModel');
+
 module.exports = function(app, passport, s3, fs) {
 	function apiPath(arg) {
 		return '/api'+arg
@@ -31,7 +35,6 @@ module.exports = function(app, passport, s3, fs) {
 		var currentUser = req.user;
 
 		// Create database entry so we have the new albumID
-		var Album = require('../models/album');
 		var newAlbum = new Album();
 		newAlbum.users = [currentUser._id];
 		newAlbum.assets = [];
@@ -40,12 +43,11 @@ module.exports = function(app, passport, s3, fs) {
 			if (err) throw err;
 
 			// Update user's album list using new albumID
-			var User = require('../models/user');
 			User.findById(currentUser._id, function (err, user) {
 				user.albums.unshift(album._id);
 		    user.save(function (err, user, count) {
 		    	if (err) throw err;
-		      console.log("UPDATED!", user);
+		      console.log("Album added to user!", user);
 		      res.send(200);
 		    });
 		  });
@@ -60,7 +62,6 @@ module.exports = function(app, passport, s3, fs) {
 		var albumID = req.params.albumID;
 
 		// Create database entry so we have the assetID
-		var Asset = require('../models/asset');
 		var newAsset = new Asset();
 		newAsset.save(function(err, asset) {
 		  if (err) throw err;

@@ -31,8 +31,8 @@ module.exports = function(app, passport) {
 	});
 
 	// Single Album
-	app.get('/album', isLoggedIn, function(req, res) {
-		res.render('album.ejs', {
+	app.get('/albums/:albumID', isLoggedIn, function(req, res) {
+		res.render('singleAlbum.ejs', {
 			user : req.user
 		});
 	});
