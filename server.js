@@ -1,18 +1,19 @@
 // Set up ======================================================================
-var express  = require('express');
-var app      = express();
-var port     = process.env.PORT || 8080;
+var express = require('express');
+var app = express();
+var port = process.env.PORT || 8080;
 var mongoose = require('mongoose');
 var passport = require('passport');
-var flash    = require('connect-flash');
-var mongodb  = require('./config/database.js');
-var knox     = require('knox');
+var flash = require('connect-flash');
+var mongodb = require('./config/database.js');
+var AWS = require('aws-sdk');
+var fs = require('fs');
 
 // Configuration ===============================================================
 mongoose.connect(mongodb.url); // connect to our database
 
-require('./config/passport')(passport); // pass passport for configuration
-require('./config/knox')(knox);  // setup knox for Amazon S3
+require('./config/passport.js')(passport); // pass passport for configuration
+require('./config/aws.js')(AWS);  // setup Amazon S3
 
 app.configure(function() {
 	// set up our express application
@@ -31,7 +32,7 @@ app.configure(function() {
 
 // Routes ======================================================================
 require('./app/routes/pages.js')(app, passport);
-require('./app/routes/api.js')(app, passport, knox);
+require('./app/routes/api.js')(app, passport, AWS, fs);
 
 // Launch ======================================================================
 app.listen(port);
