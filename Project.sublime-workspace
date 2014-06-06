@@ -1,0 +1,1191 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"file",
+				"filename"
+			],
+			[
+				"asset",
+				"assetPath"
+			],
+			[
+				"albu",
+				"albumID"
+			],
+			[
+				"print",
+				"printGrades"
+			],
+			[
+				"PRO",
+				"PROTOCOL"
+			],
+			[
+				"config",
+				"configFile"
+			],
+			[
+				"v",
+				"vector	std::vector"
+			],
+			[
+				"trace",
+				"traceLine"
+			],
+			[
+				"tra",
+				"traceFiles"
+			],
+			[
+				"proc",
+				"procFile"
+			],
+			[
+				"make",
+				"makeTmpFilePath"
+			],
+			[
+				"pro",
+				"procFile"
+			],
+			[
+				"tmp",
+				"tmpPath"
+			],
+			[
+				"traceFil",
+				"traceFiles"
+			],
+			[
+				"new",
+				"newFile"
+			],
+			[
+				"traces",
+				"traceFiles"
+			],
+			[
+				"trac",
+				"traceFiles"
+			],
+			[
+				"BusRd",
+				"BusRdX"
+			],
+			[
+				"outstanding",
+				"outstandingShout"
+			],
+			[
+				"outs",
+				"outstandingShout"
+			],
+			[
+				"gra",
+				"grantedProc"
+			],
+			[
+				"STY",
+				"STYPE_MODIFIED"
+			],
+			[
+				"outS",
+				"outstandingShout"
+			],
+			[
+				"pend",
+				"pendingShout"
+			],
+			[
+				"par",
+				"parsedFiles"
+			],
+			[
+				"out",
+				"outFile"
+			],
+			[
+				"rt",
+				"rtype"
+			],
+			[
+				"write",
+				"writeToFile"
+			],
+			[
+				"S",
+				"STYPE_SHARED"
+			],
+			[
+				"STYPE",
+				"STYPE_INVALID"
+			],
+			[
+				"RT",
+				"RTYPE_MISS"
+			],
+			[
+				"ITYP",
+				"ITYPE_READ"
+			],
+			[
+				"BUSR",
+				"BUSRequests"
+			],
+			[
+				"bus",
+				"busCtrlr"
+			],
+			[
+				"verif",
+				"verif"
+			],
+			[
+				"REF",
+				"REF_SOL"
+			],
+			[
+				"stu",
+				"student"
+			],
+			[
+				"ser",
+				"serialAns"
+			],
+			[
+				"SER",
+				"SER_IMP"
+			],
+			[
+				"ref",
+				"refVal"
+			],
+			[
+				"grad",
+				"gradeAll"
+			],
+			[
+				"serial",
+				"serial_accum"
+			],
+			[
+				"factor",
+				"factoryDir"
+			],
+			[
+				"facto",
+				"factoryDir"
+			],
+			[
+				"sub",
+				"subDir"
+			],
+			[
+				"def",
+				"defs	Method"
+			],
+			[
+				"star",
+				"start1"
+			],
+			[
+				"int2",
+				"int2_to_str"
+			],
+			[
+				"pair",
+				"pair_to_str"
+			],
+			[
+				"for",
+				"forv	Vector For Loop"
+			],
+			[
+				"least",
+				"least_recent_line"
+			],
+			[
+				"width",
+				"max-width"
+			],
+			[
+				"idle",
+				"idle_units"
+			],
+			[
+				"job",
+				"job_queue"
+			],
+			[
+				"server",
+				"server_resp"
+			],
+			[
+				"clie",
+				"client_handle"
+			],
+			[
+				"clien",
+				"client_handle"
+			],
+			[
+				"Requ",
+				"Request_msg"
+			],
+			[
+				"job_",
+				"job_tags"
+			],
+			[
+				"ta",
+				"tag"
+			],
+			[
+				"woker",
+				"worker_handle_to_kill"
+			],
+			[
+				"worker",
+				"worker_states"
+			],
+			[
+				"work",
+				"worker_states"
+			],
+			[
+				"deque",
+				"dequeue_job_if_any"
+			],
+			[
+				"get",
+				"get_tag"
+			],
+			[
+				"req",
+				"req_strings"
+			],
+			[
+				"client",
+				"client_handle"
+			],
+			[
+				"push",
+				"push_back"
+			],
+			[
+				"MAX",
+				"MAX_NUM_JOBS_PER_WORKER"
+			],
+			[
+				"get_num",
+				"get_num_queued_jobs"
+			],
+			[
+				"worke",
+				"worker_states"
+			],
+			[
+				"Work",
+				"Worker_handle"
+			],
+			[
+				"start",
+				"start_work"
+			],
+			[
+				"time",
+				"time_states"
+			],
+			[
+				"cou",
+				"cout"
+			],
+			[
+				"WORK",
+				"WORKER_BUSY"
+			],
+			[
+				"RANGE",
+				"RANGE_SECOND_IDX"
+			],
+			[
+				"wor",
+				"worker_idx"
+			],
+			[
+				"waitin",
+				"waiting_req_strings"
+			],
+			[
+				"WO",
+				"WORKER_FREE"
+			],
+			[
+				"wo",
+				"worker_states"
+			],
+			[
+				"num",
+				"num_idle_workers"
+			],
+			[
+				"incom",
+				"incoming_requests"
+			],
+			[
+				"max",
+				"max_num_workers"
+			],
+			[
+				"nu",
+				"num_workers"
+			],
+			[
+				"shield",
+				"shieldImage"
+			],
+			[
+				"Buck",
+				"bucketCounts"
+			],
+			[
+				"num_",
+				"num_edges"
+			],
+			[
+				"frontierNO",
+				"frontierNode"
+			],
+			[
+				"front",
+				"frontierNode"
+			],
+			[
+				"bfs",
+				"bfs_bottom_up"
+			],
+			[
+				"has",
+				"hasNewFrontier"
+			],
+			[
+				"NOT_V",
+				"NOT_VISITED_MARKER"
+			],
+			[
+				"NOT",
+				"NOT_VISITED_MARKER"
+			],
+			[
+				"local",
+				"localSize"
+			],
+			[
+				"sort",
+				"sortedData"
+			],
+			[
+				"end",
+				"endTime"
+			],
+			[
+				"tota",
+				"totalSize"
+			],
+			[
+				"data",
+				"dataSize"
+			],
+			[
+				"AVA",
+				"AVA_HEIGHT_DUCKING"
+			],
+			[
+				"AVA_HEI",
+				"AVA_HEIGHT_DUCKING"
+			],
+			[
+				"stance",
+				"stanceJumping"
+			],
+			[
+				"step",
+				"stepCounter"
+			],
+			[
+				"OBS_HEI",
+				"OBS_HEIGHT_TOP"
+			],
+			[
+				"obstac",
+				"obstacleTypeBottom"
+			],
+			[
+				"numB",
+				"numBlocksY"
+			],
+			[
+				"getNum",
+				"getNumBlocksY"
+			],
+			[
+				"r",
+				"r"
+			],
+			[
+				"BAKER",
+				"BAKERY_DOOR_HEIGHT"
+			],
+			[
+				"BAKERY",
+				"BAKERY_DOOR_WIDTH"
+			],
+			[
+				"baker",
+				"bakery"
+			],
+			[
+				"AVAT",
+				"AVA_WIDTH"
+			],
+			[
+				"proto",
+				"prototype"
+			],
+			[
+				"draw",
+				"drawStats"
+			],
+			[
+				"getMax",
+				"getMaxX"
+			],
+			[
+				"getMid",
+				"getMidY"
+			],
+			[
+				"MONEY",
+				"MONEY_PADDING_Y"
+			],
+			[
+				"MONEY_P",
+				"MONEY_PADDING_X"
+			],
+			[
+				"getmid",
+				"getMidX"
+			],
+			[
+				"ourQ",
+				"ourQns"
+			],
+			[
+				"ourQn",
+				"ourQn"
+			],
+			[
+				"their",
+				"theirQns"
+			],
+			[
+				"correctAN",
+				"correctAns"
+			],
+			[
+				"Quest",
+				"QuestionBox"
+			],
+			[
+				"ques",
+				"questionWindow"
+			],
+			[
+				"Questio",
+				"QuestionWindow"
+			],
+			[
+				"HUD",
+				"HUD_PADDING_Y"
+			],
+			[
+				"HUD_",
+				"HUD_PADDING_X"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "server.js",
+			"settings":
+			{
+				"buffer_size": 1662,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/routes/pages.js",
+			"settings":
+			{
+				"buffer_size": 1417,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/routes/api.js",
+			"settings":
+			{
+				"buffer_size": 2630,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "views/albums.ejs",
+			"settings":
+			{
+				"buffer_size": 1726,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "views/album.ejs",
+			"settings":
+			{
+				"buffer_size": 1873,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "public/css/main.css",
+			"settings":
+			{
+				"buffer_size": 231,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "",
+			"file": "public/js/upload.js",
+			"file_size": 569,
+			"file_write_time": 1402080593000000,
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/User/make.sublime-build",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"Package Control: remo",
+				"Package Control: Remove Package"
+			],
+			[
+				"Package Control: rem",
+				"Package Control: Remove Package"
+			],
+			[
+				"Package Control: insta",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Discover Packages"
+			],
+			[
+				"Package Control: ins",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: inst",
+				"Package Control: Install Package"
+			],
+			[
+				"Pack",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"pack",
+				"Preferences: Browse Packages"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 174.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/isaac/Documents/Development/Mojave/server/views/index.ejs",
+		"/Users/isaac/Documents/Development/Mojave/server/config/aws.js",
+		"/Users/isaac/Documents/Development/Mojave/server/config/database.js",
+		"/Users/isaac/Documents/Development/Mojave/server/config/passport.js",
+		"/Users/isaac/Documents/Development/Mojave/server/app/models/album.js",
+		"/Users/isaac/Documents/Development/Mojave/server/app/models/user.js",
+		"/Users/isaac/Documents/Development/Mojave/server/public/js/album.js",
+		"/Users/isaac/Documents/Development/Mojave/server/views/profile.ejs",
+		"/Users/isaac/Documents/Development/Mojave/server/app/stylesheets/styles.css",
+		"/Users/isaac/Documents/Development/Mojave/server/public/stylesheets/main.css",
+		"/Users/isaac/Documents/Development/Mojave/server/package.json",
+		"/Users/isaac/Downloads/credentials.csv",
+		"/Users/isaac/Documents/Development/Mojave/server/config/knox.js",
+		"/Users/isaac/Documents/Development/Mojave/server/views/albums.ejs",
+		"/Users/isaac/Documents/Development/Mojave/server/app/routes/pages.js",
+		"/Users/isaac/Documents/Development/Mojave/server/app/routes/login.js",
+		"/Users/isaac/Documents/Development/Mojave/server/app/routes.js",
+		"/Users/isaac/Downloads/rootkey.csv",
+		"/Users/isaac/Documents/Development/Mojave/server/views/login.ejs",
+		"/Users/isaac/Documents/Development/Mojave/server/config/auth.js",
+		"/Users/isaac/Documents/Development/Mobi/MobiServer/server.js",
+		"/Users/isaac/Documents/Development/Mobi/MobiServer/package.json",
+		"/Users/isaac/Documents/Development/Mobi/MobiServer/config/database.js",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#0/cilkStars.cpp",
+		"/Users/isaac/Library/Containers/it.bloop.airmail/Data/Library/Application Support/Airmail/General/Tmp/cilkStars.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#6/cilkLabScores.csv",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#5/cilkLabScores1.csv",
+		"/Users/isaac/Downloads/CilkLab Scores - Sheet1.csv",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#1/cilkLabScores1.csv",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#3/grader.py",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#4/cilkStars.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#2/cilkStars.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#0/written.txt",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#23/cilkLabScores1.csv",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#22/cilkLabScores.csv",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#21/cilkLabScores.csv",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#20/cilkLabScores.csv",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#19/cilkLabScores.csv",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#18/cilkLabScores.csv",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#16/cilkLabScores.csv",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#17/cilkLabScores.csv",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#13/cilkLabScores.csv",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#14/cilkLabScores1.csv",
+		"/Users/isaac/Downloads/written.py",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#6/Student.py",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#12/cilkStars.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#11/cilkLabScores.csv",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#10/proc.sh",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#8/cilkStars.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#9/cilkStars.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#7/cilkStars.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#5/cilkStars.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#4/Makefile",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#3/cilkStars.cpp",
+		"/Users/isaac/Library/Caches/TemporaryItems/Student.pyc",
+		"/Users/isaac/Documents/Spring 2014/15-418/cachemulator/index.html",
+		"/Users/isaac/Documents/Spring 2014/15-418/cachemulator/falsesharing.html",
+		"/Users/isaac/Documents/Spring 2014/15-418/cachemulator/final.html",
+		"/Users/isaac/Documents/Spring 2014/15-418/cachemulator/site/checkpoint.html",
+		"/Users/isaac/Documents/Spring 2014/15-418/cachemulator/site/proposal.html",
+		"/Users/isaac/Documents/Spring 2014/15-418/cachemulator/site/final.html",
+		"/Users/isaac/Documents/Spring 2014/15-418/cachemulator/site/index.html",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#11/README.md",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#10/grades.cpp",
+		"/Users/isaac/Documents/Spring 2014/15-418/cachemulator/site/falsesharing.html",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#9/evict1.trace",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#8/evict1.trace",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#7/easy1.trace",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#6/CMMemCtrlr.h",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#4/CMComp.h",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#5/CMBusCtrlr.h",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#3/CMProc.h",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#2/CMCache.h",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#1/CMProc.h",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#0/CMComp.h",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#291/grades.cpp",
+		"/Users/isaac/Downloads/stats.report",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#293/userfuncs.in",
+		"/Users/isaac/Desktop/stats.report",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#292/cachemulator.sh",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#260/userfuncs.in",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#261/cachemulator.sh",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#257/grades.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#275/stats.report",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#274/stats.report",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#268/stats.report",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#273/user.trace",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#272/stats.report",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#271/stats.report",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#270/stats.report",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#269/stats.report",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#266/stats.report",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#267/stats.report",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#258/CMConfig.h",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#236/cachemulator.sh",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#256/Makefile",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#255/Makefile",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#252/demo.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#253/pthreads.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#254/Makefile",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#242/CMConfig.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#244/main.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#243/CMConfig.h",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#251/userfuncs.in",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#249/user.trace",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#248/user.trace",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#246/Makefile",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#245/user.trace",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#241/showBusTraffic.py",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#240/main.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#201/userfuncs.in",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#229/main.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#234/cachemulator.sh",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#213/pinatrace.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#215/pthreads.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#231/CMSharing.h",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#230/CMSharing.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#232/CMProc.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#233/CMProc.h",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#192/main.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#228/debug.h",
+		"/Users/isaac/Library/Caches/TemporaryItems/random_1m.graph",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#224/user.trace",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#225/bfs.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#218/main.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#217/bfs.cpp",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#227/user.trace",
+		"/Users/isaac/Library/Caches/com.binarynights.ForkLift2/#226/main.cpp"
+	],
+	"find":
+	{
+		"height": 38.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"newPath",
+			"compile",
+			"// get the user out of session and pass to template",
+			"assetID",
+			"imgerr",
+			"s3data",
+			"s3err",
+			"res",
+			"asset",
+			"path",
+			"configDB",
+			"render",
+			"generate",
+			"lastName",
+			"userSchema",
+			"email",
+			"configAuth",
+			"cilk",
+			"Speedup",
+			"SCORE",
+			"refsol",
+			"cilk",
+			"MSI",
+			"Contention",
+			"Invalidations",
+			"Misses",
+			"fs",
+			"Misses",
+			"pthreads",
+			"user.trace",
+			"BADFILES",
+			"UGLY",
+			"PROTOCOLS",
+			"protocols",
+			"arr",
+			"bottom",
+			"NUM_THREADS",
+			"PIN_GetThreadID()",
+			"cTotalProcs",
+			"CMTest",
+			"    else:\n      print \"No reference output for this trace!\"",
+			"Stack",
+			"fibWithMem",
+			"threadFunc",
+			"file",
+			"Makefile",
+			"makefile",
+			"pinatrace",
+			"woof",
+			"meow",
+			"woof",
+			"meow",
+			"woof",
+			"funcA",
+			"meow",
+			"addrs",
+			"CMAddr*",
+			"requests",
+			"traceFiles",
+			"makeTmpFile",
+			"tid",
+			"CONFIG->",
+			"MESI",
+			"myMap",
+			"CMMemCtrlr",
+			"CMBusShout",
+			"pid",
+			"Addr",
+			"printAddr",
+			"type = ",
+			"elts",
+			"parsed",
+			"append",
+			"push",
+			"PIPE",
+			"fname",
+			"dprintf",
+			"FILE",
+			"myfile",
+			"set_index",
+			"b_mask",
+			"s_mask",
+			"raw_addr",
+			"cache->",
+			"bringLineIntoCache",
+			"SHARED",
+			"Shared",
+			"cname",
+			"lstlisting",
+			"next",
+			"rod1Lvl",
+			"shutdownSignal",
+			"reqCnt",
+			"cont",
+			"Controller",
+			"cNonDet",
+			"1",
+			"next(prod) = R",
+			"prod",
+			"next",
+			"temp",
+			"rod1Lvl",
+			"{-2, -1, 0, 1, 2};",
+			"pending",
+			"rod1Lvl",
+			"R = prod",
+			"R < prod",
+			"R > prod",
+			"{-1, 0, 1};",
+			"rod1Lvl",
+			"dRod1Lvl + ",
+			"dRod2Lvl",
+			"dRod1Lvl",
+			"int",
+			"reqSatCnt",
+			"size_t",
+			"CONFIG->numProcs",
+			"max_len",
+			"stype",
+			"procId",
+			"round_robin",
+			"outstandingReq",
+			"shoutingProc",
+			"nextJob",
+			"jobs",
+			"newJob",
+			"STYPE",
+			"stype"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 3,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "server.js",
+					"settings":
+					{
+						"buffer_size": 1662,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								823,
+								823
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 66.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "app/routes/pages.js",
+					"settings":
+					{
+						"buffer_size": 1417,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								728,
+								728
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 262.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "app/routes/api.js",
+					"settings":
+					{
+						"buffer_size": 2630,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1473,
+								1473
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 486.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "views/albums.ejs",
+					"settings":
+					{
+						"buffer_size": 1726,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								171,
+								171
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "views/album.ejs",
+					"settings":
+					{
+						"buffer_size": 1873,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1546,
+								1546
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 454.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "public/css/main.css",
+					"settings":
+					{
+						"buffer_size": 231,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								231,
+								231
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "public/js/upload.js",
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 38.0
+	},
+	"input":
+	{
+		"height": 38.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 264.0
+	},
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 142.0,
+	"status_bar_visible": true
+}
