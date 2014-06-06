@@ -28,11 +28,13 @@ app.configure(function() {
 	app.use(passport.initialize());
 	app.use(passport.session()); // persistent login sessions
 	app.use(flash()); // use connect-flash for flash messages stored in session
+
+	app.use(express.static(__dirname + '/public'));
 });
 
 // Routes ======================================================================
 require('./app/routes/pages.js')(app, passport);
-require('./app/routes/api.js')(app, passport, AWS, fs);
+require('./app/routes/api.js')(app, passport, new AWS.S3(), fs);
 
 // Launch ======================================================================
 app.listen(port);

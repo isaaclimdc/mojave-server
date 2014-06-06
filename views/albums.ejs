@@ -2,11 +2,7 @@
 <html>
 <head>
 	<title>Mojave Web</title>
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-	<style>
-		.albumCell { padding: 20px; }
-	</style>
+	<link rel="stylesheet" href="css/main.css">
 </head>
 <body>
 	<nav class="navbar navbar-default" role="navigation">
@@ -46,7 +42,11 @@
 		</div>
 		<div class="row">
 		<% user.albums.forEach(function (albumID) { %>
-		  <div class="col-md-4 albumCell"><img src="http://lorempixel.com/200/200/"></div>
+		  <a href="/album">
+		  	<div class="col-md-4 albumCell">
+		  		<img src="http://lorempixel.com/200/200/">
+		  	</div>
+		  </a>
 		<% }); %>
 		</div>
 

@@ -5,7 +5,6 @@
 	<link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-
 	<nav class="navbar navbar-default" role="navigation">
 	  <div class="container-fluid">
 	    <!-- Brand and toggle get grouped for better mobile display -->
@@ -22,8 +21,8 @@
 	    <!-- Collect the nav links, forms, and other content for toggling -->
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	      <ul class="nav navbar-nav">
-	        <li><a href="/albums"><span class="fa fa-picture-o"></span> Albums</a></li>
-	        <li class="active"><a href="#"><span class="fa fa-user"></span> Profile</a></li>
+	        <li class="active"><a href="#"><span class="fa fa-picture-o"></span> Albums</a></li>
+	        <li><a href="/profile"><span class="fa fa-user"></span> Profile</a></li>
 	      </ul>
 	      <ul class="nav navbar-nav navbar-right">
 	        <li><a href="/logout"><span class="fa fa-sign-out"></span> Logout</a></li>
@@ -32,39 +31,24 @@
 	  </div>
 	</nav>
 
-<div class="container">
+	<div class="container">
 
-	<div class="page-header">
-		<h1><span class="fa fa-user"></span> Profile</h1>
-	</div>
+		<div class="page-header">
+			<h1><span class="fa fa-picture-o"></span> An Album</h1>
+		</div>
 
-	<div class="row">
-
-		<!-- USER INFORMATION -->
-		<div class="col-sm-6">
-			<div class="well">
-				<h3>
-					<%= user.firstName %> <%= user.lastName %>
-				</h3>
-
-				<img src= <%= user.picture %> />
-
-				<p>
-					<strong>userID</strong>: <%= user.userID %><br>
-					<strong>email</strong>: <%= user.email %><br>
-					<!-- <strong>fbToken</strong>: <%= user.fbToken %><br> -->
-					<strong>firstName</strong>: <%= user.firstName %><br>
-					<strong>lastName</strong>: <%= user.lastName %><br>
-					<strong>friends</strong>: <%= user.friends %><br>
-					<strong>albums</strong>: <%= user.albums %><br>
-					<strong>currentAlbum</strong>: <%= user.currentAlbum %><br>
-					<strong>appPrefs</strong>: <%= user.appPrefs %>
-				</p>
-			</div>
+		<div class="row">
+			<span class="fa fa-plus"></span> Upload Photo
+			<span class="btn btn-default btn-file">
+			   <input type="file">
+			</span>
+		</div>
+		<div class="row">
+		<% user.albums.forEach(function (albumID) { %>
+		  <div class="col-md-4 albumCell"><img src="http://lorempixel.com/200/200/"></div>
+		<% }); %>
 		</div>
 
 	</div>
-
-</div>
 </body>
 </html>

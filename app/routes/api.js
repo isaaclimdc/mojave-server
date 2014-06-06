@@ -2,7 +2,9 @@
 // MOJAVE API ==================================================================
 // =============================================================================
 
-module.exports = function(app, passport, AWS, fs) {
+var BUCKET_NAME = 'b1.mojavebucket';
+
+module.exports = function(app, passport, s3, fs) {
 	function apiPath(arg) {
 		return '/api'+arg
 	}
@@ -33,26 +35,51 @@ module.exports = function(app, passport, AWS, fs) {
 		console.log(albumID, fullFilePath, remotePath);
 
 		// Read in the file and store to S3
-		fs.readFile(fullFilePath, function (err, data) {
-		  if (err) throw err;
-
-		  var s3 = new AWS.S3();
+		fs.readFile(fullFilePath, function (imgErr, imgData) {
+		  if (imgErr) throw imgErr;
 
 		  s3.client.putObject({
-		    Bucket: 'b1.mojavebucket',
+		    Bucket: BUCKET_NAME,
 		    Key: remotePath,
-		    Body: data
-		  }, function (s3err, s3data) {
-		    if (s3err) {
-		    	console.log(s3err, s3err.stack);
+		    Body: imgData
+		  }, function (s3Err, s3Data) {
+		    if (s3Err) {
+		    	console.log(s3Err, s3Err.stack);
 		    	res.send(400);
 		    } else {
-		    	console.log('Successfully uploaded file!', s3data);
+		    	console.log('Successfully uploaded file!', s3Data);
 		    	res.send(200);
 		    }
 		  });
 		});
 	});
+
+	// // Get photo
+	// app.get(apiPath('/album/:albumID/:assetID'), function(req, res) {
+	// 	var albumID = req.params.albumID;
+	// 	var assetID = req.params.assetID;
+	// 	var remotePath = assetPath(albumID, filePath);
+	// 	console.log(albumID, fullFilePath, remotePath);
+
+	// 	// Read in the file and store to S3
+	// 	fs.readFile(fullFilePath, function (imgErr, imgData) {
+	// 	  if (imgErr) throw imgErr;
+
+	// 	  s3.client.putObject({
+	// 	    Bucket: BUCKET_NAME,
+	// 	    Key: remotePath,
+	// 	    Body: imgData
+	// 	  }, function (s3Err, s3Data) {
+	// 	    if (s3Err) {
+	// 	    	console.log(s3Err, s3Err.stack);
+	// 	    	res.send(400);
+	// 	    } else {
+	// 	    	console.log('Successfully uploaded file!', s3Data);
+	// 	    	res.send(200);
+	// 	    }
+	// 	  });
+	// 	});
+	// });
 
 };
 

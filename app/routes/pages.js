@@ -26,14 +26,21 @@ module.exports = function(app, passport) {
 	// Albums
 	app.get('/albums', isLoggedIn, function(req, res) {
 		res.render('albums.ejs', {
-			user : req.user // get the user out of session and pass to template
+			user : req.user
+		});
+	});
+
+	// Single Album
+	app.get('/album', isLoggedIn, function(req, res) {
+		res.render('album.ejs', {
+			user : req.user
 		});
 	});
 
 	// Profile - login access only
 	app.get('/profile', isLoggedIn, function(req, res) {
 		res.render('profile.ejs', {
-			user : req.user // get the user out of session and pass to template
+			user : req.user
 		});
 	});
 
