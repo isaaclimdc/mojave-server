@@ -34,19 +34,20 @@ module.exports = function(app, passport, AWS, fs) {
 
 		// Read in the file and store to S3
 		fs.readFile(fullFilePath, function (err, data) {
-		  if (err) { throw err; }
+		  if (err) throw err;
 
 		  var s3 = new AWS.S3();
-		  console.log(s3);
+
 		  s3.client.putObject({
 		    Bucket: 'b1.mojavebucket',
 		    Key: remotePath,
 		    Body: data
 		  }, function (s3err, s3data) {
-		    if (err) {
-		    	console.log(err, err.stack);
+		    if (s3err) {
+		    	console.log(s3err, s3err.stack);
+		    	res.send(400);
 		    } else {
-		    	console.log('Successfully uploaded file!', data);
+		    	console.log('Successfully uploaded file!', s3data);
 		    	res.send(200);
 		    }
 		  });
