@@ -46,7 +46,7 @@ module.exports = function(passport) {
     process.nextTick(function() {
 
       // find the user in the database based on their facebook id
-      User.findOne({ 'userID' : profile.id }, function(err, user) {
+      User.findOne({ 'fbID' : profile.id }, function(err, user) {
 
         // if there is an error, stop everything and return that
         // ie an error connecting to the database
@@ -63,7 +63,7 @@ module.exports = function(passport) {
           var newUser = new User();
 
           // set all of the facebook information in our user model
-          newUser.userID = profile.id;
+          newUser.fbID = profile.id;
           newUser.email = profile.emails[0].value;
           newUser.fbToken = token;
           newUser.firstName = profile.name.givenName

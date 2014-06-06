@@ -1,8 +1,11 @@
+// =============================================================================
+// USER MODEL ==================================================================
+// =============================================================================
+
 var mongoose = require('mongoose');
 
-// User model
 var UserSchema = mongoose.Schema({
-  userID : Number,            // Facebook ID
+  fbID : Number,              // Facebook ID (!= _id)
   email : String,
   fbToken : String,
   firstName : String,
