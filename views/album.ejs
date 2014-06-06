@@ -3,6 +3,8 @@
 <head>
 	<title>Mojave Web</title>
 	<link rel="stylesheet" href="css/main.css">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="js/upload.js"></script>
 </head>
 <body>
 	<nav class="navbar navbar-default" role="navigation">
@@ -38,10 +40,10 @@
 		</div>
 
 		<div class="row">
-			<span class="fa fa-plus"></span> Upload Photo
-			<span class="btn btn-default btn-file">
-			   <input type="file">
-			</span>
+			<form method='post' action='/api/album/425425/upload' enctype='multipart/form-data'>
+				<input type='file' name='newImage'/>
+				<input type='submit' />
+			</form>
 		</div>
 		<div class="row">
 		<% user.albums.forEach(function (albumID) { %>
