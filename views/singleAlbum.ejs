@@ -38,15 +38,13 @@
 		</div>
 
 		<div class="row">
-			<form method='post' action='/api/album/425425/upload' enctype='multipart/form-data'>
+			<form method='post' action='/api/album/<%= albumID %>/upload' enctype='multipart/form-data'>
 				<input type='file' name='newImage'/>
 				<input type='submit' />
 			</form>
 		</div>
 		<div class="row">
-		<% user.albums.forEach(function (albumID) { %>
-		  <div class="col-md-4 albumCell"><img src="http://lorempixel.com/200/200/"></div>
-		<% }); %>
+
 		</div>
 
 	</div>

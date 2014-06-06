@@ -30,6 +30,15 @@ module.exports = function(app, passport, s3, fs) {
 
 	// ALBUM =====================================================================
 
+	// Get album object with albumID
+	app.get(apiPath('/album/:albumID'), function(req, res) {
+		// Update user's album list using new albumID
+		Album.findById(req.params.albumID, function (err, album) {
+			if (err) throw err;
+			res.send(album);
+	  });
+	});
+
 	// Create a new album
 	app.post(apiPath('/album/new'), function(req, res) {
 		var currentUser = req.user;
@@ -44,8 +53,9 @@ module.exports = function(app, passport, s3, fs) {
 
 			// Update user's album list using new albumID
 			User.findById(currentUser._id, function (err, user) {
+				if (err) throw err;
 				user.albums.unshift(album._id);
-		    user.save(function (err, user, count) {
+		    user.save(function (err, user) {
 		    	if (err) throw err;
 		      console.log("Album added to user!", user);
 		      res.send(200);
@@ -75,32 +85,34 @@ module.exports = function(app, passport, s3, fs) {
 		  console.log("Remote path:", remotePath);
 
 		  // Read in the file
-		  fs.readFile(localPath, function (imgErr, imgData) {
-		  	if (imgErr) {
-		  		console.log("Error reading image!")
-		  		res.redirect("/");
-		  		res.send(404);
-		  	} else {
-		  		// Send the file to S3
-		  	  s3.client.putObject({
-		  	    Bucket: BUCKET_NAME,
-		  	    Key: remotePath,
-		  	    Body: imgData,
-		  	    ContentType: 'image/jpeg',
-		  	  }, function (s3Err, s3Data) {
-		  	    if (s3Err) {
-		  	    	console.log(s3Err, s3Err.stack);
-		  	    	res.send(404);
-		  	    } else {
-		  	    	console.log('Successfully uploaded file!', s3Data);
+		  fs.readFile(localPath, function (err, data) {
+		  	if (err) throw err;
 
-		  	    	// Update database with S3 key
-		  	    	// asset.update({_id: assetID}, {s3Key: remotePath})
+	  		// Send the file to S3
+	  		var params = {
+	  	    Bucket: BUCKET_NAME,
+	  	    Key: remotePath,
+	  	    Body: data,
+	  	    ContentType: 'image/jpeg',
+	  	  };
+	  	  s3.client.putObject(params, function (err, data) {
+	  	  	if (err) throw err;
 
-		  	    	res.send(200);
-		  	    }
-		  	  });
-		  	}
+  	    	console.log('Successfully uploaded file!', data);
+
+	    		// Update album's list of assets
+	    		Album.findById(albumID, function (err, album) {
+	    			if (err) throw err;
+	    			album.assets.unshift(assetID);
+	    	    album.save(function (err, album) {
+	    	    	if (err) throw err;
+	    	      console.log("Asset added to album!", album);
+	    	      res.send(200);
+	    	    });
+	    	  });
+
+  	    	res.send(200);
+	  	  });
 		  });
 		});
 	});

@@ -33,7 +33,7 @@ module.exports = function(app, passport) {
 	// Single Album
 	app.get('/albums/:albumID', isLoggedIn, function(req, res) {
 		res.render('singleAlbum.ejs', {
-			user : req.user
+			albumID : req.params.albumID
 		});
 	});
 
