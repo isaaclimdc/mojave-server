@@ -11,9 +11,9 @@ var UserSchema = mongoose.Schema({
   firstName : String,
   lastName : String,
   picture : String,           // URL of picture from Facebook
-  friends : [Number],         // Array of userID
-  albums : [Number],          // Array of albumID
-  currentAlbum : Number,      // albumID
+  friends : [mongoose.Schema.Types.ObjectId],         // Array of userID
+  albums : [mongoose.Schema.Types.ObjectId],          // Array of albumID
+  currentAlbum : mongoose.Schema.Types.ObjectId,      // albumID
   appPrefs : {
     syncOnData : Boolean,
     syncOnBattery : Boolean

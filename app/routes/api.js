@@ -26,6 +26,32 @@ module.exports = function(app, passport, s3, fs) {
 
 	// ALBUM =====================================================================
 
+	// Create a new album
+	app.post(apiPath('/album/new'), function(req, res) {
+		var currentUser = req.user;
+
+		// Create database entry so we have the new albumID
+		var Album = require('../models/album');
+		var newAlbum = new Album();
+		newAlbum.users = [currentUser._id];
+		newAlbum.assets = [];
+		newAlbum.coverAsset = null;
+		newAlbum.save(function(err, album) {
+			if (err) throw err;
+
+			// Update user's album list using new albumID
+			var User = require('../models/user');
+			User.findById(currentUser._id, function (err, user) {
+				user.albums.unshift(album._id);
+		    user.save(function (err, user, count) {
+		    	if (err) throw err;
+		      console.log("UPDATED!", user);
+		      res.send(200);
+		    });
+		  });
+		});
+	});
+
 	// Upload photo
 	app.post(apiPath('/album/:albumID/upload'), function(req, res) {
 		// Prepare file upload
