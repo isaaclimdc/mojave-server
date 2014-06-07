@@ -8,3 +8,7 @@
 .albumCell {
   padding: 20px;
 }
+
+.albumCell img {
+  max-width: 200px;
+}

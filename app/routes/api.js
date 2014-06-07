@@ -3,30 +3,32 @@
 // =============================================================================
 
 var BUCKET_NAME = 'b1.mojavebucket';
+var SERVER_NAME = 'https://s3-us-west-1.amazonaws.com';
 
 var User = require('../models/userModel');
 var Album = require('../models/albumModel');
 var Asset = require('../models/assetModel');
 
+function apiPath(arg) { return '/api'+arg; }
+
+function albumPath(albumID) { return 'albums/'+albumID; }
+
+function assetPath(albumID, assetID, filename) {
+	return 'albums/' + albumID + '/' + assetID + '.' + getExt(filename);
+}
+
+function assetURL(remotePath) {
+	return SERVER_NAME + '/' + BUCKET_NAME + '/' + remotePath;
+}
+
+function getExt(filename) {
+	var a = filename.split('.');
+	if (a.length === 1 || (a[0] === '' && a.length === 2))
+	  return '';
+	return a.pop();
+}
+
 module.exports = function(app, passport, s3, fs) {
-	function apiPath(arg) {
-		return '/api'+arg
-	}
-
-	function albumPath(albumID) {
-		return 'albums/'+albumID
-	}
-
-	function assetPath(albumID, assetID, filename) {
-		return 'albums/'+albumID+'/'+assetID+'.'+getExt(filename);
-	}
-
-	function getExt(filename) {
-		var a = filename.split('.');
-		if (a.length === 1 || (a[0] === '' && a.length === 2))
-		  return '';
-		return a.pop();
-	}
 
 	// ALBUM =====================================================================
 
@@ -48,6 +50,8 @@ module.exports = function(app, passport, s3, fs) {
 		newAlbum.users = [currentUser._id];
 		newAlbum.assets = [];
 		newAlbum.coverAsset = null;
+		newAlbum.title = 'Default Album Title';
+
 		newAlbum.save(function(err, album) {
 			if (err) throw err;
 
@@ -103,7 +107,13 @@ module.exports = function(app, passport, s3, fs) {
 	    		// Update album's list of assets
 	    		Album.findById(albumID, function (err, album) {
 	    			if (err) throw err;
+
+	    			var remoteURL = assetURL(remotePath);
+	    			console.log(remoteURL);
+
 	    			album.assets.unshift(assetID);
+	    			album.assetThumbs.unshift(remoteURL);  // TODO: Actually do thumbnail
+
 	    	    album.save(function (err, album) {
 	    	    	if (err) throw err;
 	    	      console.log("Asset added to album!", album);
