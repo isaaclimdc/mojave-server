@@ -5,6 +5,7 @@
 	<link rel="stylesheet" href="../css/main.css">
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="../js/singleAlbum.js"></script>
+	<script src="../js/bootstrap.file-input.js"></script>
 </head>
 <body>
 	<nav class="navbar navbar-default" role="navigation">
@@ -40,8 +41,8 @@
 		</div>
 
 		<div class="row">
-			<form method='post' action='/api/album/<%= albumID %>/upload' enctype='multipart/form-data'>
-				<input type='file' name='newImage'/>
+			<form id='newImageForm'>
+				<input type='file' name='newImage' title='<span class="fa fa-plus"></span> Upload image'>
 				<input type='submit' />
 			</form>
 		</div>
