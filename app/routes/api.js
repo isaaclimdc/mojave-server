@@ -9,6 +9,8 @@ var User = require('../models/userModel');
 var Album = require('../models/albumModel');
 var Asset = require('../models/assetModel');
 
+var im = require('imagemagick');
+
 function apiPath(arg) { return '/api'+arg; }
 
 function albumPath(albumID) { return 'albums/'+albumID; }
@@ -96,40 +98,42 @@ module.exports = function(app, s3, fs) {
 		  console.log("Remote path:", remotePaths.thumb, remotePaths.full);
 
 		  sendImageToS3(remotePaths.full, false);
-		  sendImageToS3(remotePaths.thumb, true); // TODO: GENERATE THUMBNAILS!
+		  sendImageToS3(remotePaths.thumb, true);
 
   		function sendImageToS3(remotePath, isThumb) {
+  			var params = {
+	  	    Bucket: BUCKET_NAME,
+	  	    Key: remotePath,
+	  	    ContentType: 'image/jpeg',
+	  	  };
+
   			if (isThumb) {
-  				// Generate thumbnail here!
-  				fs.readFile(localPath, function (err, data) {
-	  				if (err) throw err;
+  				var tmpLocalPath = localPath+'thumb';
 
-			  		var params = {
-			  	    Bucket: BUCKET_NAME,
-			  	    Key: remotePath,
-			  	    Body: data,
-			  	    ContentType: 'image/jpeg',
-			  	  };
+					im.resize({ srcPath: localPath, dstPath: tmpLocalPath, width: 200 },
+						function(err) {
+						  if (err) throw err;
 
-			  	  s3.client.putObject(params, function (err, ETag) {
-			  	  	if (err) throw err;
+						  console.log('Resized image to width of 200px!');
 
-		  	    	console.log('Successfully uploaded file!', ETag);
-		  	    	res.send(200);
-	  	 			});
-	  			});
+						  fs.readFile(tmpLocalPath, function (err, data) {
+								if (err) throw err;
+
+								params.Body = data;
+					  	  s3.client.putObject(params, function (err, ETag) {
+					  	  	if (err) throw err;
+
+				  	    	console.log('Successfully uploaded file!', ETag);
+				  	    	res.send(200);
+			  	 			});
+					  	});
+		  			});
   			}
   			else {
 	  			fs.readFile(localPath, function (err, data) {
 	  				if (err) throw err;
 
-			  		var params = {
-			  	    Bucket: BUCKET_NAME,
-			  	    Key: remotePath,
-			  	    Body: data,
-			  	    ContentType: 'image/jpeg',
-			  	  };
-
+	  				params.Body = data;
 			  	  s3.client.putObject(params, function (err, ETag) {
 			  	  	if (err) throw err;
 
@@ -170,13 +174,19 @@ module.exports = function(app, s3, fs) {
 			// Get remote URL
 			var remotePaths = assetPaths(albumID, assetID, asset.fileType);
 
-			// Get signed URL from S3
+			// Get signed URLs from S3
 			var params = { Bucket: BUCKET_NAME, Key: remotePaths.thumb };
-			s3.getSignedUrl('getObject', params, function (err, url) {
+			s3.getSignedUrl('getObject', params, function (err, thumbURL) {
 				if (err) throw err;
 
-			  console.log("The URL is", url);
-			  res.send(url);
+				params.Key = remotePaths.full;
+			  s3.getSignedUrl('getObject', params, function (err, fullURL) {
+		  		if (err) throw err;
+
+		  		var urls = { thumb : thumbURL, full : fullURL};
+		  		console.log("Image URLs are:", urls);
+		  	  res.send(urls);
+		  	});
 			});
 		});
 	});
