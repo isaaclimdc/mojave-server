@@ -20,10 +20,10 @@ $(document).ready(function() {
     });
   });
 
-  loadUser();
+  loadUserAndAlbums();
 });
 
-function loadUser() {
+function loadUserAndAlbums() {
   if (window.mojaveUser) {
     loadAlbums();
     return;
@@ -55,24 +55,29 @@ function loadAlbums() {
   var table = $('.albumsTable');
   for (var i = 0; i < window.mojaveUser.albums.length; i++) {
     var albumID = window.mojaveUser.albums[i];
+    console.log(albumID);
 
-    // <a href="/albums/<%= albumID %>">
-    //   <div class="col-md-4 albumCell">
-    //     <img src="http://lorempixel.com/200/200/">
-    //   </div>
-    // </a>
+    // Fetch album cover
+    $.ajax({
+      url: '/api/album/'+albumID+'/cover',
+      type: 'GET',
+      success: function(data) {
+        var a = $('<a>');
+        a.attr('href', '/albums/'+data.albumID);
 
-    var a = $('<a>');
-    a.attr('href', '/albums/'+albumID);
+        var div = $('<div>');
+        div.attr('class', 'col-md-4 albumCell');
 
-    var div = $('<div>');
-    div.attr('class', 'col-md-4 albumCell');
+        var img = $('<img>');
+        img.attr('src', data.coverURL);
 
-    var img = $('<img>');
-    img.attr('src', 'http://lorempixel.com/200/200/');
-
-    div.append(img);
-    a.append(div);
-    table.append(a);
+        div.append(img);
+        a.append(div);
+        table.append(a);
+      },
+      failure: function(err) {
+        throw err;
+      }
+    });
   }
 }
