@@ -9,6 +9,7 @@ var User = require('../models/userModel');
 var Album = require('../models/albumModel');
 var Asset = require('../models/assetModel');
 
+var fs = require('fs');
 var im = require('imagemagick');
 
 function apiPath(arg) { return '/api'+arg; }
@@ -30,10 +31,10 @@ function getExt(filename) {
 	var a = filename.split('.');
 	if (a.length === 1 || (a[0] === '' && a.length === 2))
 	  return '';
-	return a.pop();
+	return a.pop().toLowerCase();
 }
 
-module.exports = function(app, s3, fs) {
+module.exports = function(app, s3) {
 
 	// ALBUM =====================================================================
 

@@ -7,7 +7,6 @@ var passport = require('passport');
 var flash = require('connect-flash');
 var mongodb = require('./config/database');
 var AWS = require('aws-sdk');
-var fs = require('fs');
 
 // Configuration ===============================================================
 mongoose.connect(mongodb.url); // connect to our database
@@ -33,7 +32,7 @@ app.configure(function() {
 
 // Routes ======================================================================
 require('./app/routes/pages')(app, passport);
-require('./app/routes/api')(app, new AWS.S3(), fs);
+require('./app/routes/api')(app, new AWS.S3());
 
 // Launch ======================================================================
 app.listen(port);
