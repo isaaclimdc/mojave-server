@@ -2,7 +2,7 @@
 // MOJAVE API ==================================================================
 // =============================================================================
 
-var BUCKET_NAME = 'b1.mojavebucket';
+var BUCKET_NAME = 'mojave';
 var SERVER_NAME = 'https://s3-us-west-1.amazonaws.com';
 
 var User = require('../models/userModel');
@@ -13,8 +13,8 @@ function apiPath(arg) { return '/api'+arg; }
 
 function albumPath(albumID) { return 'albums/'+albumID; }
 
-function assetPath(albumID, assetID, filename) {
-	return 'albums/' + albumID + '/' + assetID + '.' + getExt(filename);
+function assetPath(albumID, assetID, fileType) {
+	return 'albums/' + albumID + '/' + assetID + '.' + fileType;
 }
 
 function assetURL(remotePath) {
@@ -50,7 +50,7 @@ module.exports = function(app, passport, s3, fs) {
 		newAlbum.users = [currentUser._id];
 		newAlbum.assets = [];
 		newAlbum.coverAsset = null;
-		newAlbum.title = 'Default Album Title';
+		newAlbum.title = req.body.title;
 
 		newAlbum.save(function(err, album) {
 			if (err) throw err;
@@ -71,18 +71,22 @@ module.exports = function(app, passport, s3, fs) {
 	// Upload photo
 	app.post(apiPath('/album/:albumID/upload'), function(req, res) {
 		// Prepare file upload
-		var filename = req.files.newImage.name;
+		var fileName = req.files.newImage.name;
 		var localPath = req.files.newImage.path;
 		var albumID = req.params.albumID;
+		var fileType = getExt(fileName);
 
 		// Create database entry so we have the assetID
 		var newAsset = new Asset();
+		newAsset.fileType = fileType;
+		newAsset.owner = req.user._id;
+
 		newAsset.save(function(err, asset) {
 		  if (err) throw err;
 
 		  var assetID = asset._id;
 
-		  var remotePath = assetPath(albumID, assetID, filename);
+		  var remotePath = assetPath(albumID, assetID, fileType);
 		  console.log("Preparing to upload image...");
 		  console.log("Album ID:", albumID);
 		  console.log("Local path:", localPath);
@@ -127,32 +131,29 @@ module.exports = function(app, passport, s3, fs) {
 		});
 	});
 
-	// // Get photo
-	// app.get(apiPath('/album/:albumID/:assetID'), function(req, res) {
-	// 	var albumID = req.params.albumID;
-	// 	var assetID = req.params.assetID;
-	// 	var remotePath = assetPath(albumID, filePath);
-	// 	console.log(albumID, fullFilePath, remotePath);
+	// Get photo
+	app.get(apiPath('/album/:albumID/:assetID'), function(req, res) {
+		var albumID = req.params.albumID;
+		var assetID = req.params.assetID;
 
-	// 	// Read in the file and store to S3
-	// 	fs.readFile(fullFilePath, function (imgErr, imgData) {
-	// 	  if (imgErr) throw imgErr;
+		// Find asset in db
+		Asset.findById(assetID, function (err, asset) {
+			if (err) throw err;
 
-	// 	  s3.client.putObject({
-	// 	    Bucket: BUCKET_NAME,
-	// 	    Key: remotePath,
-	// 	    Body: imgData
-	// 	  }, function (s3Err, s3Data) {
-	// 	    if (s3Err) {
-	// 	    	console.log(s3Err, s3Err.stack);
-	// 	    	res.send(400);
-	// 	    } else {
-	// 	    	console.log('Successfully uploaded file!', s3Data);
-	// 	    	res.send(200);
-	// 	    }
-	// 	  });
-	// 	});
-	// });
+			// Get remote URL
+			var remotePath = assetPath(albumID, assetID, asset.fileType);
+			var remoteURL = assetURL(remotePath);
+
+			// Get signed URL from S3
+			var params = { Bucket: BUCKET_NAME, Key: remotePath };
+			s3.getSignedUrl('getObject', params, function (err, url) {
+				if (err) throw err;
+
+			  console.log("The URL is", url);
+			  res.send(url);
+			});
+		});
+	});
 
 };
 

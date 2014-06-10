@@ -15,20 +15,23 @@ function loadAlbum() {
     // Load assets
     console.log(album.assetThumbs);
     for (var i = 0; i < album.assets.length; i++) {
+      var assetID = album.assets[i];
       var thumbURL = album.assetThumbs[i];
-      console.log("Loading asset with URL", thumbURL);
+
+      $.get('/api/album/'+albumID+'/'+assetID, function (signedURL, status) {
 
       // <div class="">
       //   <img src="http://lorempixel.com/200/200/">
       // </div>
 
-      var div = $('<div>');
-      div.attr('class', 'col-md-4 albumCell');
-      var img = $('<img>');
-      img.attr('src', thumbURL);
-      div.append(img);
+        var div = $('<div>');
+        div.attr('class', 'col-md-4 albumCell');
+        var img = $('<img>');
+        img.attr('src', signedURL);
+        div.append(img);
 
-      table.append(div);
+        table.append(div);
+      });
     }
   });
 }
