@@ -96,11 +96,28 @@ module.exports = function(app, s3, fs) {
 		  console.log("Remote path:", remotePaths.thumb, remotePaths.full);
 
 		  sendImageToS3(remotePaths.full, false);
-		  sendImageToS3(remotePaths.thumb, false); // TODO: GENERATE THUMBNAILS! Pretending for now
+		  sendImageToS3(remotePaths.thumb, true); // TODO: GENERATE THUMBNAILS!
 
   		function sendImageToS3(remotePath, isThumb) {
   			if (isThumb) {
   				// Generate thumbnail here!
+  				fs.readFile(localPath, function (err, data) {
+	  				if (err) throw err;
+
+			  		var params = {
+			  	    Bucket: BUCKET_NAME,
+			  	    Key: remotePath,
+			  	    Body: data,
+			  	    ContentType: 'image/jpeg',
+			  	  };
+
+			  	  s3.client.putObject(params, function (err, ETag) {
+			  	  	if (err) throw err;
+
+		  	    	console.log('Successfully uploaded file!', ETag);
+		  	    	res.send(200);
+	  	 			});
+	  			});
   			}
   			else {
 	  			fs.readFile(localPath, function (err, data) {
