@@ -13,8 +13,11 @@ function apiPath(arg) { return '/api'+arg; }
 
 function albumPath(albumID) { return 'albums/'+albumID; }
 
-function assetPath(albumID, assetID, fileType) {
-	return 'albums/' + albumID + '/' + assetID + '.' + fileType;
+function assetPaths(albumID, assetID, fileType) {
+	var pre = 'albums/' + albumID;
+	var file = assetID + '.' + fileType;
+	return { 'thumb' : pre + '/thumb/' + file,
+	         'full' : pre + '/full/' + file };
 }
 
 function assetURL(remotePath) {
@@ -28,7 +31,7 @@ function getExt(filename) {
 	return a.pop();
 }
 
-module.exports = function(app, passport, s3, fs) {
+module.exports = function(app, s3, fs) {
 
 	// ALBUM =====================================================================
 
@@ -86,48 +89,55 @@ module.exports = function(app, passport, s3, fs) {
 
 		  var assetID = asset._id;
 
-		  var remotePath = assetPath(albumID, assetID, fileType);
+		  var remotePaths = assetPaths(albumID, assetID, fileType);
 		  console.log("Preparing to upload image...");
 		  console.log("Album ID:", albumID);
 		  console.log("Local path:", localPath);
-		  console.log("Remote path:", remotePath);
+		  console.log("Remote path:", remotePaths.thumb, remotePaths.full);
 
-		  // Read in the file
-		  fs.readFile(localPath, function (err, data) {
-		  	if (err) throw err;
+		  sendImageToS3(remotePaths.full, false);
+		  sendImageToS3(remotePaths.thumb, false); // TODO: GENERATE THUMBNAILS! Pretending for now
 
-	  		// Send the file to S3
-	  		var params = {
-	  	    Bucket: BUCKET_NAME,
-	  	    Key: remotePath,
-	  	    Body: data,
-	  	    ContentType: 'image/jpeg',
-	  	  };
-	  	  s3.client.putObject(params, function (err, data) {
-	  	  	if (err) throw err;
+  		function sendImageToS3(remotePath, isThumb) {
+  			if (isThumb) {
+  				// Generate thumbnail here!
+  			}
+  			else {
+	  			fs.readFile(localPath, function (err, data) {
+	  				if (err) throw err;
 
-  	    	console.log('Successfully uploaded file!', data);
+			  		var params = {
+			  	    Bucket: BUCKET_NAME,
+			  	    Key: remotePath,
+			  	    Body: data,
+			  	    ContentType: 'image/jpeg',
+			  	  };
 
-	    		// Update album's list of assets
-	    		Album.findById(albumID, function (err, album) {
-	    			if (err) throw err;
+			  	  s3.client.putObject(params, function (err, ETag) {
+			  	  	if (err) throw err;
 
-	    			var remoteURL = assetURL(remotePath);
-	    			console.log(remoteURL);
+		  	    	console.log('Successfully uploaded file!', ETag);
 
-	    			album.assets.unshift(assetID);
-	    			album.assetThumbs.unshift(remoteURL);  // TODO: Actually do thumbnail
+	  	    		// Update album's list of assets
+		    			Album.findById(albumID, function (err, album) {
+			    			if (err) throw err;
 
-	    	    album.save(function (err, album) {
-	    	    	if (err) throw err;
-	    	      console.log("Asset added to album!", album);
-	    	      res.send(200);
-	    	    });
-	    	  });
+			    			var remoteURL = assetURL(remotePath);
+			    			console.log(remoteURL);
 
-  	    	res.send(200);
-	  	  });
-		  });
+			    			album.assets.unshift(assetID);
+
+			    	    album.save(function (err, album) {
+			    	    	if (err) throw err;
+
+			    	      console.log("Asset added to album!", album);
+			    	      res.send(200);
+			    	    });
+		    	  	});
+	  	 			});
+	  			});
+	  		}
+	  	}
 		});
 	});
 
@@ -141,11 +151,10 @@ module.exports = function(app, passport, s3, fs) {
 			if (err) throw err;
 
 			// Get remote URL
-			var remotePath = assetPath(albumID, assetID, asset.fileType);
-			var remoteURL = assetURL(remotePath);
+			var remotePaths = assetPaths(albumID, assetID, asset.fileType);
 
 			// Get signed URL from S3
-			var params = { Bucket: BUCKET_NAME, Key: remotePath };
+			var params = { Bucket: BUCKET_NAME, Key: remotePaths.thumb };
 			s3.getSignedUrl('getObject', params, function (err, url) {
 				if (err) throw err;
 
@@ -156,12 +165,3 @@ module.exports = function(app, passport, s3, fs) {
 	});
 
 };
-
-function isLoggedIn(req, res, next) {
-	// if user is authenticated in the session, carry on
-	if (req.isAuthenticated())
-		return next();
-
-	// if they aren't, redirect them to home
-	res.redirect('/');
-}

@@ -33,7 +33,7 @@ app.configure(function() {
 
 // Routes ======================================================================
 require('./app/routes/pages')(app, passport);
-require('./app/routes/api')(app, passport, new AWS.S3(), fs);
+require('./app/routes/api')(app, new AWS.S3(), fs);
 
 // Launch ======================================================================
 app.listen(port);

@@ -42,13 +42,12 @@ function loadAlbum() {
     // Load assets
     for (var i = 0; i < album.assets.length; i++) {
       var assetID = album.assets[i];
-      var thumbURL = album.assetThumbs[i];
 
       $.get('/api/album/'+albumID+'/'+assetID, function(signedURL, status) {
 
-      // <div class="">
-      //   <img src="http://lorempixel.com/200/200/">
-      // </div>
+        // <div class="">
+        //   <img src="http://lorempixel.com/200/200/">
+        // </div>
 
         var div = $('<div>');
         div.attr('class', 'col-md-4 albumCell');
