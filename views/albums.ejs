@@ -98,14 +98,9 @@
 			  </div>
 			</div>
 		</div>
-		<div class="row">
-		<% user.albums.forEach(function (albumID) { %>
-		  <a href="/albums/<%= albumID %>">
-		  	<div class="col-md-4 albumCell">
-		  		<img src="http://lorempixel.com/200/200/">
-		  	</div>
-		  </a>
-		<% }); %>
+
+		<div class="row albumsTable" id="<%= user._id %>">
+
 		</div>
 
 	</div>

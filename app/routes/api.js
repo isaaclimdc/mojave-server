@@ -36,11 +36,20 @@ function getExt(filename) {
 
 module.exports = function(app, s3) {
 
+	// USER ======================================================================
+
+	// Get album object with albumID
+	app.get(apiPath('/user/:userID'), function(req, res) {
+		User.findById(req.params.userID, function (err, user) {
+			if (err) throw err;
+			res.send(user);
+	  });
+	});
+
 	// ALBUM =====================================================================
 
 	// Get album object with albumID
 	app.get(apiPath('/album/:albumID'), function(req, res) {
-		// Update user's album list using new albumID
 		Album.findById(req.params.albumID, function (err, album) {
 			if (err) throw err;
 			res.send(album);
