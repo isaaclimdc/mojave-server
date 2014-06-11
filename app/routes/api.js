@@ -46,7 +46,7 @@ module.exports = function(app, s3) {
 	// Get user object with userID
 	app.get(apiPath('/user/:userID'), function(req, res) {
 		User.findById(req.params.userID, function (err, user) {
-			handle(err);
+			if (err) throw err;
 			res.send(user);
 	  });
 	});
@@ -58,7 +58,7 @@ module.exports = function(app, s3) {
 		var albumID = req.params.albumID;
 
 		Album.findById(albumID, function (err, album) {
-			handle(err);
+			if (err) throw err;
 
 			for (var i = 0; i < album.assets.length; i++) {
 				var asset = album.assets[i];
@@ -80,7 +80,7 @@ module.exports = function(app, s3) {
 		var albumID = req.params.albumID;
 
 		Album.findById(albumID, function (err, album) {
-			handle(err);
+			if (err) throw err;
 
 			var resObj = { albumID : albumID };
 			var coverIdx = album.coverAsset;
@@ -92,8 +92,6 @@ module.exports = function(app, s3) {
 				res.send(resObj);
 				return;
 			}
-
-			console.log(coverAsset);
 
 			if (coverAsset.thumbURL) {
 				resObj.coverURL = coverAsset.thumbURL;
@@ -123,15 +121,15 @@ module.exports = function(app, s3) {
 		newAlbum.title = req.body.title;
 
 		newAlbum.save(function(err, album) {
-			handle(err);
+			if (err) throw err;
 
 			// Update user's album list using new albumID
 			User.findById(currentUser._id, function (err, user) {
-				handle(err);
+				if (err) throw err;
 
 				user.albums.unshift(album._id);
 		    user.save(function (err, user) {
-		    	handle(err);
+		    	if (err) throw err;
 
 		      console.log("Album added to user!", user);
 		      res.send(200);
@@ -148,13 +146,19 @@ module.exports = function(app, s3) {
 		var albumID = req.params.albumID;
 		var fileType = getExt(fileName);
 
+		// Protect against empty form submission. Send BAD_REQUEST
+		if (!fileName) {
+			res.send(400);
+			return;
+		}
+
 		// Create database entry so we have the assetID
 		var newAsset = new Asset();
 		newAsset.fileType = fileType;
 		newAsset.owner = req.user._id;
 
 		newAsset.save(function (err, asset) {
-		  handle(err);
+		  if (err) throw err;
 
 		  var assetID = asset._id;
 
@@ -173,32 +177,32 @@ module.exports = function(app, s3) {
 			var tmpLocalPath = localPath+'thumb';
 			im.resize({ srcPath: localPath, dstPath: tmpLocalPath, width: 200 },
 				function (err) {
-				  handle(err);
+				  if (err) throw err;
 
 				  console.log('Resized image to width of 200px!');
 
 				  // Read in local thumbnail image
 				  fs.readFile(tmpLocalPath, function (err, data) {
-						handle(err);
+						if (err) throw err;
 
 						// Send thumbnail to S3
 						params.Body = data;
 						params.Key = remotePaths.thumb;
 			  	  s3.client.putObject(params, function (err, ETag) {
-			  	  	handle(err);
+			  	  	if (err) throw err;
 
 		  	    	console.log('Successfully uploaded thumbnail!');
 
 		  	    	// Find album we're uploading to
 		    			Album.findById(albumID, function (err, album) {
-			    			handle(err);
+			    			if (err) throw err;
 
 			    			// Update album's list of assets
 			    			var asset = makeAsset(assetID, null, null);
 			    			album.assets.unshift(asset);
 
 			    	    album.save(function (err, album) {
-			    	    	handle(err);
+			    	    	if (err) throw err;
 
 			    	      console.log("Asset added to album in db!", album);
 
@@ -209,12 +213,12 @@ module.exports = function(app, s3) {
 
 			    	      // In the background, upload full image to S3, don't respond.
 			    	      fs.readFile(localPath, function (err, data) {
-					  				handle(err);
+					  				if (err) throw err;
 
 					  				params.Body = data;
 					  				params.Key = remotePaths.full;
 							  	  s3.client.putObject(params, function (err, ETag) {
-							  	  	handle(err);
+							  	  	if (err) throw err;
 
 						  	    	console.log('Successfully uploaded full image!');
 					  	 			});
@@ -244,13 +248,11 @@ module.exports = function(app, s3) {
 
 	// HELPERS ===================================================================
 
-	function handle(err) { if (err) throw err; }
-
 	// TODO: Optimize by not calling .getSignedUrl every time.
 	function getSignedURL(remotePath, success) {
 		var params = { Bucket: BUCKET_NAME, Key: remotePath };
 		s3.getSignedUrl('getObject', params, function (err, signedURL) {
-			handle(err);
+			if (err) throw err;
 			success(signedURL);
 		});
 	}
