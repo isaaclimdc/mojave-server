@@ -54,7 +54,9 @@ function loadAlbumsForUser(user) {
         div.attr('class', 'col-md-4 albumCell');
 
         var img = $('<img>');
-        img.attr('src', data.coverURL);
+        var coverURL = data.coverURL;
+        if (coverURL == null) coverURL = 'img/phAlbumCover.png';
+        img.attr('src', coverURL);
 
         div.append(img);
         a.append(div);

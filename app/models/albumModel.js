@@ -11,7 +11,7 @@ var AlbumSchema = mongoose.Schema({
     thumbURL : String,
     fullURL : String
   }],
-  coverAsset : mongoose.Schema.Types.ObjectId,     // assetID
+  coverAsset : Number,                             // Index into assets array
   title : String                                   // Album title
 });
 

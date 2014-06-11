@@ -82,22 +82,32 @@ module.exports = function(app, s3) {
 		Album.findById(albumID, function (err, album) {
 			handle(err);
 
-			var coverAssetID = album.coverAsset;
 			var resObj = { albumID : albumID };
+			var coverIdx = album.coverAsset;
+			var coverAsset = album.assets[coverIdx];
 
-			if (coverAssetID == undefined | coverAssetID == null) {
-				resObj.coverURL = 'img/phAlbumCover.png';
+			// If album is empty, set .coverURL to null. Let client handle it
+			if (coverAsset == undefined | coverAsset == null) {
+				resObj.coverURL = null;
 				res.send(resObj);
 				return;
 			}
 
-			// Get remote URL
-			var remotePaths = assetPaths(albumID, coverAssetID);
+			console.log(coverAsset);
 
-			getSignedURL(remotePaths.thumb, function (thumbURL) {
-				resObj.coverURL = thumbURL;
+			if (coverAsset.thumbURL) {
+				resObj.coverURL = coverAsset.thumbURL;
 				res.send(resObj);
-			});
+				return;
+			}
+			else {
+				// Get remote URL
+				var remotePaths = assetPaths(albumID, coverAsset.assetID);
+				getSignedURL(remotePaths.thumb, function (thumbURL) {
+					resObj.coverURL = thumbURL;
+					res.send(resObj);
+				});
+			}
 		});
 	});
 
@@ -109,7 +119,7 @@ module.exports = function(app, s3) {
 		var newAlbum = new Album();
 		newAlbum.users = [currentUser._id];
 		newAlbum.assets = [];
-		newAlbum.coverAsset = null;
+		newAlbum.coverAsset = 0;
 		newAlbum.title = req.body.title;
 
 		newAlbum.save(function(err, album) {
@@ -179,10 +189,11 @@ module.exports = function(app, s3) {
 
 		  	    	console.log('Successfully uploaded thumbnail!');
 
-		  	    	// Update album's list of assets
+		  	    	// Find album we're uploading to
 		    			Album.findById(albumID, function (err, album) {
 			    			handle(err);
 
+			    			// Update album's list of assets
 			    			var asset = makeAsset(assetID, null, null);
 			    			album.assets.unshift(asset);
 
@@ -216,25 +227,26 @@ module.exports = function(app, s3) {
 		});
 	});
 
-	// Get photo
-	app.get(apiPath('/album/:albumID/:assetID'), function (req, res) {
-		var albumID = req.params.albumID;
-		var assetID = req.params.assetID;
+	// // Get photo
+	// app.get(apiPath('/album/:albumID/:assetID'), function (req, res) {
+	// 	var albumID = req.params.albumID;
+	// 	var assetID = req.params.assetID;
 
-		// Get remote URL
-		var remotePaths = assetPaths(albumID, assetID);
+	// 	// Get remote URL
+	// 	var remotePaths = assetPaths(albumID, assetID);
 
-		// Get signed URLs from S3
-		getSignedURLs(remotePaths, function (urls) {
-  		console.log("Image URLs are:", urls);
-  	  res.send(urls);
-		});
-	});
+	// 	// Get signed URLs from S3
+	// 	getSignedURLs(remotePaths, function (urls) {
+ //  		console.log("Image URLs are:", urls);
+ //  	  res.send(urls);
+	// 	});
+	// });
 
 	// HELPERS ===================================================================
 
 	function handle(err) { if (err) throw err; }
 
+	// TODO: Optimize by not calling .getSignedUrl every time.
 	function getSignedURL(remotePath, success) {
 		var params = { Bucket: BUCKET_NAME, Key: remotePath };
 		s3.getSignedUrl('getObject', params, function (err, signedURL) {
