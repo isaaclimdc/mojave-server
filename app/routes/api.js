@@ -197,9 +197,9 @@ module.exports = function(app, s3) {
 		    			Album.findById(albumID, function (err, album) {
 			    			if (err) throw err;
 
-			    			// Update album's list of assets
+			    			// Append to the album's list of assets
 			    			var asset = makeAsset(assetID, null, null);
-			    			album.assets.unshift(asset);
+			    			album.assets.push(asset);
 
 			    	    album.save(function (err, album) {
 			    	    	if (err) throw err;
