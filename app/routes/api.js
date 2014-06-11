@@ -19,8 +19,8 @@ function albumPath(albumID) { return 'albums/'+albumID; }
 function assetPaths(albumID, assetID) {
 	var pre = 'albums/' + albumID;
 	var file = assetID + '.jpg';     //TODO: Support other filetypes
-	return { 'thumb' : pre + '/thumb/' + file,
-	         'full' : pre + '/full/' + file };
+	return { thumb : pre + '/thumb/' + file,
+	         full : pre + '/full/' + file };
 }
 
 function assetURL(remotePath) {
@@ -46,7 +46,7 @@ module.exports = function(app, s3) {
 	// Get user object with userID
 	app.get(apiPath('/user/:userID'), function(req, res) {
 		User.findById(req.params.userID, function (err, user) {
-			if (err) throw err;
+			handle(err);
 			res.send(user);
 	  });
 	});
@@ -58,9 +58,8 @@ module.exports = function(app, s3) {
 		var albumID = req.params.albumID;
 
 		Album.findById(albumID, function (err, album) {
-			if (err) throw err;
+			handle(err);
 
-			var assetURLs = [];
 			for (var i = 0; i < album.assets.length; i++) {
 				var asset = album.assets[i];
 
@@ -72,7 +71,6 @@ module.exports = function(app, s3) {
 				asset.fullURL = urls.full;
 			}
 
-			console.log(album.assets);
 			res.send(album);
 	  });
 	});
@@ -82,7 +80,7 @@ module.exports = function(app, s3) {
 		var albumID = req.params.albumID;
 
 		Album.findById(albumID, function (err, album) {
-			if (err) throw err;
+			handle(err);
 
 			var coverAssetID = album.coverAsset;
 			var resObj = { albumID : albumID };
@@ -115,14 +113,16 @@ module.exports = function(app, s3) {
 		newAlbum.title = req.body.title;
 
 		newAlbum.save(function(err, album) {
-			if (err) throw err;
+			handle(err);
 
 			// Update user's album list using new albumID
 			User.findById(currentUser._id, function (err, user) {
-				if (err) throw err;
+				handle(err);
+
 				user.albums.unshift(album._id);
 		    user.save(function (err, user) {
-		    	if (err) throw err;
+		    	handle(err);
+
 		      console.log("Album added to user!", user);
 		      res.send(200);
 		    });
@@ -144,7 +144,7 @@ module.exports = function(app, s3) {
 		newAsset.owner = req.user._id;
 
 		newAsset.save(function (err, asset) {
-		  if (err) throw err;
+		  handle(err);
 
 		  var assetID = asset._id;
 
@@ -154,70 +154,65 @@ module.exports = function(app, s3) {
 		  console.log("Local path:", localPath);
 		  console.log("Remote path:", remotePaths.thumb, remotePaths.full);
 
-		  sendImageToS3(remotePaths.full, false);
-		  sendImageToS3(remotePaths.thumb, true);
+			var params = {
+  	    Bucket: BUCKET_NAME,
+  	    ContentType: 'image/jpeg',
+  	  };
 
-  		function sendImageToS3(remotePath, isThumb) {
-  			var params = {
-	  	    Bucket: BUCKET_NAME,
-	  	    Key: remotePath,
-	  	    ContentType: 'image/jpeg',
-	  	  };
+  	  // Resize image into thumbnail, save locally
+			var tmpLocalPath = localPath+'thumb';
+			im.resize({ srcPath: localPath, dstPath: tmpLocalPath, width: 200 },
+				function (err) {
+				  handle(err);
 
-  			if (isThumb) {
-  				var tmpLocalPath = localPath+'thumb';
+				  console.log('Resized image to width of 200px!');
 
-					im.resize({ srcPath: localPath, dstPath: tmpLocalPath, width: 200 },
-						function (err) {
-						  if (err) throw err;
+				  // Read in local thumbnail image
+				  fs.readFile(tmpLocalPath, function (err, data) {
+						handle(err);
 
-						  console.log('Resized image to width of 200px!');
-
-						  fs.readFile(tmpLocalPath, function (err, data) {
-								if (err) throw err;
-
-								params.Body = data;
-					  	  s3.client.putObject(params, function (err, ETag) {
-					  	  	if (err) throw err;
-
-				  	    	console.log('Successfully uploaded file!', ETag);
-				  	    	res.send(200);
-			  	 			});
-					  	});
-		  			});
-  			}
-  			else {
-	  			fs.readFile(localPath, function (err, data) {
-	  				if (err) throw err;
-
-	  				params.Body = data;
+						// Send thumbnail to S3
+						params.Body = data;
+						params.Key = remotePaths.thumb;
 			  	  s3.client.putObject(params, function (err, ETag) {
-			  	  	if (err) throw err;
+			  	  	handle(err);
 
-		  	    	console.log('Successfully uploaded file!', ETag);
+		  	    	console.log('Successfully uploaded thumbnail!');
 
-	  	    		// Update album's list of assets
+		  	    	// Update album's list of assets
 		    			Album.findById(albumID, function (err, album) {
-			    			if (err) throw err;
-
-			    			var remoteURL = assetURL(remotePath);
-			    			console.log(remoteURL);
+			    			handle(err);
 
 			    			var asset = makeAsset(assetID, null, null);
-
 			    			album.assets.unshift(asset);
 
 			    	    album.save(function (err, album) {
-			    	    	if (err) throw err;
+			    	    	handle(err);
 
-			    	      console.log("Asset added to album!", album);
+			    	      console.log("Asset added to album in db!", album);
+
+			    	      // IMPORTANT: Respond "OK" before uploading full image.
+			    	      // Potential race condition here, but it's much faster this way
+			    	      // TODO: If the lightbox GET fails, just try again after a few seconds.
 			    	      res.send(200);
+
+			    	      // In the background, upload full image to S3, don't respond.
+			    	      fs.readFile(localPath, function (err, data) {
+					  				handle(err);
+
+					  				params.Body = data;
+					  				params.Key = remotePaths.full;
+							  	  s3.client.putObject(params, function (err, ETag) {
+							  	  	handle(err);
+
+						  	    	console.log('Successfully uploaded full image!');
+					  	 			});
+					  			});
 			    	    });
 		    	  	});
 	  	 			});
-	  			});
-	  		}
-	  	}
+			  	});
+  			});
 		});
 	});
 
@@ -238,10 +233,12 @@ module.exports = function(app, s3) {
 
 	// HELPERS ===================================================================
 
+	function handle(err) { if (err) throw err; }
+
 	function getSignedURL(remotePath, success) {
 		var params = { Bucket: BUCKET_NAME, Key: remotePath };
 		s3.getSignedUrl('getObject', params, function (err, signedURL) {
-			if (err) throw err;
+			handle(err);
 			success(signedURL);
 		});
 	}

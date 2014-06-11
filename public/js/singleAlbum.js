@@ -1,6 +1,3 @@
-// Load current user object from localStorage
-window.mojaveUser = JSON.parse(localStorage.getItem('mojaveUser'));
-
 $(document).ready(function() {
   $('input[type=file]').bootstrapFileInput();
   $('.file-inputs').bootstrapFileInput();
@@ -48,7 +45,6 @@ function loadAlbum() {
       // Load assets
       for (var i = 0; i < album.assets.length; i++) {
         var asset = album.assets[i];
-        console.log(asset);
 
         var div = $('<div>');
         div.attr('class', 'col-md-4 albumCell');
