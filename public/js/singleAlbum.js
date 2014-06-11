@@ -47,31 +47,23 @@ function loadAlbum() {
 
       // Load assets
       for (var i = 0; i < album.assets.length; i++) {
-        var assetID = album.assets[i];
+        var asset = album.assets[i];
+        console.log(asset);
 
-        $.ajax({
-          url: '/api/album/'+albumID+'/'+assetID,
-          type: 'GET',
-          success: function(signedURLs) {
-            var div = $('<div>');
-            div.attr('class', 'col-md-4 albumCell');
+        var div = $('<div>');
+        div.attr('class', 'col-md-4 albumCell');
 
-            var a = $('<a>');
-            a.attr('class', 'fancybox');
-            a.attr('rel', 'group');
-            a.attr('href', signedURLs.full);
+        var a = $('<a>');
+        a.attr('class', 'fancybox');
+        a.attr('rel', 'group');
+        a.attr('href', asset.fullURL);
 
-            var img = $('<img>');
-            img.attr('src', signedURLs.thumb);
+        var img = $('<img>');
+        img.attr('src', asset.thumbURL);
 
-            a.append(img);
-            div.append(a);
-            table.append(div);
-          },
-          failure: function(err) {
-            throw err;
-          }
-        });
+        a.append(img);
+        div.append(a);
+        table.append(div);
       }
     },
     failure: function(err) {

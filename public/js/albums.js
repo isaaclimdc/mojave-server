@@ -24,12 +24,6 @@ $(document).ready(function() {
 });
 
 function loadUserAndAlbums() {
-  if (window.mojaveUser) {
-    loadAlbums();
-    return;
-  }
-
-  // Load only if not already existing
   var table = $('.albumsTable');
   var userID = table.attr('id');
   console.log("FETCHING MOJAVE USER WITH ID:", userID);     //TODO: ARRGGGH SO HACKY!!
@@ -55,7 +49,6 @@ function loadAlbums() {
   var table = $('.albumsTable');
   for (var i = 0; i < window.mojaveUser.albums.length; i++) {
     var albumID = window.mojaveUser.albums[i];
-    console.log(albumID);
 
     // Fetch album cover
     $.ajax({

@@ -16,9 +16,9 @@ function apiPath(arg) { return '/api'+arg; }
 
 function albumPath(albumID) { return 'albums/'+albumID; }
 
-function assetPaths(albumID, assetID, fileType) {
+function assetPaths(albumID, assetID) {
 	var pre = 'albums/' + albumID;
-	var file = assetID + '.' + fileType;
+	var file = assetID + '.jpg';     //TODO: Support other filetypes
 	return { 'thumb' : pre + '/thumb/' + file,
 	         'full' : pre + '/full/' + file };
 }
@@ -27,18 +27,23 @@ function assetURL(remotePath) {
 	return SERVER_NAME + '/' + BUCKET_NAME + '/' + remotePath;
 }
 
+function makeAsset(assetID, thumb, full) {
+	return { 'assetID' : assetID, 'thumbURL' : thumb, 'fullURL' : full};
+}
+
 function getExt(filename) {
-	var a = filename.split('.');
-	if (a.length === 1 || (a[0] === '' && a.length === 2))
-	  return '';
-	return a.pop().toLowerCase();
+	return "jpg";     //TODO: Support other filetypes
+	// var a = filename.split('.');
+	// if (a.length === 1 || (a[0] === '' && a.length === 2))
+	//   return '';
+	// return a.pop().toLowerCase();
 }
 
 module.exports = function(app, s3) {
 
 	// USER ======================================================================
 
-	// Get album object with albumID
+	// Get user object with userID
 	app.get(apiPath('/user/:userID'), function(req, res) {
 		User.findById(req.params.userID, function (err, user) {
 			if (err) throw err;
@@ -50,8 +55,24 @@ module.exports = function(app, s3) {
 
 	// Get album object with albumID
 	app.get(apiPath('/album/:albumID'), function (req, res) {
-		Album.findById(req.params.albumID, function (err, album) {
+		var albumID = req.params.albumID;
+
+		Album.findById(albumID, function (err, album) {
 			if (err) throw err;
+
+			var assetURLs = [];
+			for (var i = 0; i < album.assets.length; i++) {
+				var asset = album.assets[i];
+
+				// Get remote URL
+				var remotePaths = assetPaths(albumID, asset.assetID);
+
+				var urls = synchGetSignedURLs(remotePaths);
+				asset.thumbURL = urls.thumb;
+				asset.fullURL = urls.full;
+			}
+
+			console.log(album.assets);
 			res.send(album);
 	  });
 	});
@@ -72,18 +93,13 @@ module.exports = function(app, s3) {
 				return;
 			}
 
-			// TODO: OPTIMIZE THIS DB CALL OUT
-			Asset.findById(coverAssetID, function (err, asset) {
-				if (err) throw err;
+			// Get remote URL
+			var remotePaths = assetPaths(albumID, coverAssetID);
 
-				// Get remote URL
-				var remotePaths = assetPaths(albumID, coverAssetID, asset.fileType);
-
-				getSignedURL(remotePaths.thumb, function (thumbURL) {
-					resObj.coverURL = thumbURL;
-					res.send(resObj);
-				});
-	  	});
+			getSignedURL(remotePaths.thumb, function (thumbURL) {
+				resObj.coverURL = thumbURL;
+				res.send(resObj);
+			});
 		});
 	});
 
@@ -132,7 +148,7 @@ module.exports = function(app, s3) {
 
 		  var assetID = asset._id;
 
-		  var remotePaths = assetPaths(albumID, assetID, fileType);
+		  var remotePaths = assetPaths(albumID, assetID);
 		  console.log("Preparing to upload image...");
 		  console.log("Album ID:", albumID);
 		  console.log("Local path:", localPath);
@@ -187,7 +203,9 @@ module.exports = function(app, s3) {
 			    			var remoteURL = assetURL(remotePath);
 			    			console.log(remoteURL);
 
-			    			album.assets.unshift(assetID);
+			    			var asset = makeAsset(assetID, null, null);
+
+			    			album.assets.unshift(asset);
 
 			    	    album.save(function (err, album) {
 			    	    	if (err) throw err;
@@ -208,22 +226,13 @@ module.exports = function(app, s3) {
 		var albumID = req.params.albumID;
 		var assetID = req.params.assetID;
 
-		// Find asset in db
-		// TODO: OPTIMIZE THIS DB CALL OUT
-		Asset.findById(assetID, function (err, asset) {
-			if (err) throw err;
+		// Get remote URL
+		var remotePaths = assetPaths(albumID, assetID);
 
-			// Get remote URL
-			var remotePaths = assetPaths(albumID, assetID, asset.fileType);
-
-			// Get signed URLs from S3
-			getSignedURL(remotePaths.thumb, function (thumbURL) {
-			  getSignedURL(remotePaths.full, function (fullURL) {
-		  		var urls = { thumb : thumbURL, full : fullURL};
-		  		console.log("Image URLs are:", urls);
-		  	  res.send(urls);
-		  	});
-			});
+		// Get signed URLs from S3
+		getSignedURLs(remotePaths, function (urls) {
+  		console.log("Image URLs are:", urls);
+  	  res.send(urls);
 		});
 	});
 
@@ -235,5 +244,24 @@ module.exports = function(app, s3) {
 			if (err) throw err;
 			success(signedURL);
 		});
+	}
+
+	function synchGetSignedURL(remotePath) {
+		var params = { Bucket: BUCKET_NAME, Key: remotePath };
+		return s3.getSignedUrl('getObject', params);
+	}
+
+	function getSignedURLs(remotePaths, success) {
+		getSignedURL(remotePaths.thumb, function (thumbURL) {
+		  getSignedURL(remotePaths.full, function (fullURL) {
+	  	  success({ thumb : thumbURL, full : fullURL });
+	  	});
+		});
+	}
+
+	function synchGetSignedURLs(remotePaths) {
+		var thumbURL = synchGetSignedURL(remotePaths.thumb);
+		var fullURL = synchGetSignedURL(remotePaths.full);
+		return { thumb : thumbURL, full : fullURL };
 	}
 };
