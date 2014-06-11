@@ -59,7 +59,7 @@ function loadAlbum() {
 
         a.append(img);
         div.append(a);
-        table.append(div);
+        table.prepend(div);
       }
     },
     failure: function(err) {
