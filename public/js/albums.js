@@ -39,28 +39,31 @@ function loadAlbums() {
 
 function loadAlbumsForUser(user) {
   var table = $('.albumsTable');
+
   for (var i = 0; i < user.albums.length; i++) {
     var albumID = user.albums[i];
+
+    var a = $('<a>');
+    a.attr('href', '/albums/'+albumID);
+
+    var div = $('<div>');
+    div.attr('class', 'col-md-4 albumCell');
+    div.attr('id', albumID);
+
+    a.append(div);
+    table.append(a);
 
     // Fetch album cover
     $.ajax({
       url: '/api/album/'+albumID+'/cover',
       type: 'GET',
       success: function(data) {
-        var a = $('<a>');
-        a.attr('href', '/albums/'+data.albumID);
-
-        var div = $('<div>');
-        div.attr('class', 'col-md-4 albumCell');
-
         var img = $('<img>');
         var coverURL = data.coverURL;
         if (coverURL == null) coverURL = 'img/phAlbumCover.png';
         img.attr('src', coverURL);
 
-        div.append(img);
-        a.append(div);
-        table.append(a);
+        $('#'+data.albumID).append(img);
       },
       failure: function(err) {
         throw err;
