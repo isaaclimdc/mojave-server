@@ -122,18 +122,18 @@ function createNewAlbum() {
   });
   console.log(collabs);
 
-  // $.ajax({
-  //   url: '/api/album/new',
-  //   type: 'POST',
-  //   data: {
-  //     title: albumTitle,
-  //     collabs: collabs
-  //   },
-  //   success: function(data) {
-  //     location.reload();
-  //   },
-  //   failure: function(err) {
-  //     throw err;
-  //   }
-  // });
+  $.ajax({
+    url: '/api/album/new',
+    type: 'POST',
+    data: {
+      title: albumTitle,
+      collabs: collabs
+    },
+    success: function(data) {
+      location.reload();
+    },
+    failure: function(err) {
+      throw err;
+    }
+  });
 }

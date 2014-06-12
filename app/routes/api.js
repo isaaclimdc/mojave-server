@@ -60,6 +60,8 @@ module.exports = function(app, s3) {
 		Album.findById(albumID, function (err, album) {
 			if (err) throw err;
 
+			console.log(album);
+
 			for (var i = 0; i < album.assets.length; i++) {
 				var asset = album.assets[i];
 
@@ -112,29 +114,37 @@ module.exports = function(app, s3) {
 	// Create a new album
 	app.post(apiPath('/album/new'), function (req, res) {
 		var currentUser = req.user;
+		var title = req.body.title;
+		var collabs = req.body.collabs;
+
+		collabs.unshift(currentUser._id);
 
 		// Create database entry so we have the new albumID
 		var newAlbum = new Album();
-		newAlbum.users = [currentUser._id];
+		newAlbum.users = collabs;
 		newAlbum.assets = [];
 		newAlbum.coverAsset = 0;
-		newAlbum.title = req.body.title;
+		newAlbum.title = title;
 
 		newAlbum.save(function(err, album) {
 			if (err) throw err;
 
-			// Update user's album list using new albumID
-			User.findById(currentUser._id, function (err, user) {
-				if (err) throw err;
+			for (var i = 0; i < collabs.length; i++) {
+				var userID = collabs[i];
 
-				user.albums.unshift(album._id);
-		    user.save(function (err, user) {
-		    	if (err) throw err;
+				// Update user's album list using new albumID
+				User.findById(userID, function (err, user) {
+					if (err) throw err;
 
-		      console.log("Album added to user!", user);
-		      res.send(200);
-		    });
-		  });
+					user.albums.unshift(album._id);
+			    user.save(function (err, user) {
+			    	if (err) throw err;
+
+			      console.log("Album added to user!", user);
+			      res.send(200);
+			    });
+			  });
+			}
 		});
 	});
 
