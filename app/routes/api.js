@@ -167,10 +167,8 @@ module.exports = function(app, s3) {
 		Album.findById(albumID, function (err, album) {
 			if (err) throw err;
 
-			if (!album.collabs.contains(req.user._id)) {
-				console.log(typeof(album.collabs[0]), typeof(req.user._id));
-				return res.send(400);
-			}
+			// STOPPED HERE::::: Add send errors to all APIs.
+			if (!album.collabs.contains(req.user._id)) return res.send(400);
 
 			newAsset.save(function (err, asset) {
 			  if (err) throw err;
@@ -236,8 +234,8 @@ module.exports = function(app, s3) {
 			    	    });
 		    	  	});
 	  	 			});
-			  	});
-  			});
+			  });
+  		});
 		});
 	});
 
