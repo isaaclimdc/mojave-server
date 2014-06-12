@@ -1,25 +1,10 @@
 $(document).ready(function() {
-  $('#newAlbumSaveBtn').click(function() {
-    var albumTitle = $('#albumTitle').val();
-    console.log(albumTitle);
+  $('#newAlbumSaveBtn').click(createNewAlbum);
 
-    $.ajax({
-      url: '/api/album/new',
-      type: 'POST',
-      data: { title: albumTitle },
-      success: function(data) {
-        location.reload();
-      },
-      failure: function(err) {
-        throw err;
-      }
-    });
-  });
-
-  loadAlbums();
+  loadUserData();
 });
 
-function loadAlbums() {
+function loadUserData() {
   var table = $('.albumsTable');
   var userID = table.attr('id');
   console.log("Logged in as user:", userID);     //TODO: ARRGGGH SO HACKY!!
@@ -30,6 +15,7 @@ function loadAlbums() {
     type: 'GET',
     success: function(user) {
       loadAlbumsForUser(user);
+      loadCollaboratorsForUser(user);
     },
     failure: function(err) {
       throw err;
@@ -70,4 +56,84 @@ function loadAlbumsForUser(user) {
       }
     });
   }
+}
+
+function loadCollaboratorsForUser(user) {
+  var fixedDivID = 'selectCollabs';
+  var fixedDiv = $('#'+fixedDivID);
+
+  function makeInputID(friendID) {
+    return fixedDivID+'-'+friendID;
+  }
+
+  for (var i = 0; i < user.friends.length; i++) {
+    var friendID = user.friends[i];
+
+    var div = $('<div>');
+    div.attr('class', 'checkbox');
+
+    var label = $('<label>');
+    label.attr('for', makeInputID(friendID));
+
+    div.append(label);
+    fixedDiv.append(div);
+
+    // Fetch friend user
+    $.ajax({
+      url: '/api/user/'+friendID,
+      type: 'GET',
+      success: function(friend) {
+        var friendName = friend.firstName + ' ' + friend.lastName;
+        console.log("Friend:", friendName, friend);
+
+        // <div class="checkbox">
+        //   <label for="selectCollabs-0">
+        //     <input type="checkbox" name="selectCollabs" id="selectCollabs-0" value="bobsmith">
+        //     Bob Smith
+        //   </label>
+        // </div>
+
+        var inputID = makeInputID(friend._id);
+        var label = $("label[for='"+inputID+"']");
+        label.text(friendName);
+
+        var input = $('<input>');
+        input.attr({
+          'type': 'checkbox',
+          'id': inputID,
+          'value': friend._id
+        });
+
+        label.append(input);
+      },
+      failure: function(err) {
+        throw err;
+      }
+    });
+  }
+}
+
+function createNewAlbum() {
+  var albumTitle = $('#albumTitle').val();
+
+  var collabs = [];
+  $(':checkbox:checked').each(function(i){
+    collabs.push($(this).val());
+  });
+  console.log(collabs);
+
+  // $.ajax({
+  //   url: '/api/album/new',
+  //   type: 'POST',
+  //   data: {
+  //     title: albumTitle,
+  //     collabs: collabs
+  //   },
+  //   success: function(data) {
+  //     location.reload();
+  //   },
+  //   failure: function(err) {
+  //     throw err;
+  //   }
+  // });
 }
