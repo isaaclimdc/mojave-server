@@ -135,13 +135,12 @@ module.exports = function(app, s3) {
 					user.albums.unshift(album._id);
 			    user.save(function (err, user) {
 			    	if (err) throw err;
-
-			      console.log("Album added to user!", user);
-			      res.send(200);
+			    	callback();  // Means this async call is done.
 			    });
 			  });
 			}, function (err) {
 				if (err) throw err;
+				console.log("Album added to all collaborators!");
 				res.send(200);  // All iterators are done, send "OK"!
 			});
 		});
