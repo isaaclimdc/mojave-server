@@ -61,14 +61,17 @@ module.exports = function(app, s3) {
 		Album.findById(albumID, function (err, album) {
 			if (err) throw err;
 
-			album.assets.forEach(function (asset) {
+			async.each(album.assets, function (asset, callback) {
 				var remotePaths = assetPaths(albumID, asset.assetID);
-				var urls = synchGetSignedURLs(remotePaths);
-				asset.thumbURL = urls.thumb;
-				asset.fullURL = urls.full;
+				getSignedURLs(remotePaths, function (urls) {
+					asset.thumbURL = urls.thumb;
+					asset.fullURL = urls.full;
+					callback();  // Means this async call is done.
+				});
+			}, function (err) {
+				if (err) throw err;
+				return res.json(album);  // All iterators are done, send back album!
 			});
-
-			return res.json(album);
 	  });
 	});
 
@@ -262,23 +265,12 @@ module.exports = function(app, s3) {
 		});
 	}
 
-	function synchGetSignedURL(remotePath) {
-		var params = { Bucket: BUCKET_NAME, Key: remotePath };
-		return s3.getSignedUrl('getObject', params);
-	}
-
 	function getSignedURLs(remotePaths, success) {
 		getSignedURL(remotePaths.thumb, function (thumbURL) {
 		  getSignedURL(remotePaths.full, function (fullURL) {
 	  	  success({ thumb : thumbURL, full : fullURL });
 	  	});
 		});
-	}
-
-	function synchGetSignedURLs(remotePaths) {
-		var thumbURL = synchGetSignedURL(remotePaths.thumb);
-		var fullURL = synchGetSignedURL(remotePaths.full);
-		return { thumb : thumbURL, full : fullURL };
 	}
 
 	Array.prototype.contains = function(obj) {
