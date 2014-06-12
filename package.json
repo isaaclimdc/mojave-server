@@ -16,6 +16,7 @@
     "passport-facebook" : "~1.0.2",
     "connect-flash" : "~0.1.1",
     "aws-sdk" : "*",
-    "imagemagick" : "*"
+    "imagemagick" : "*",
+    "async" : "*"
   }
 }
