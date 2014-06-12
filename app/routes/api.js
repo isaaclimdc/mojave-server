@@ -84,28 +84,25 @@ module.exports = function(app, s3) {
 		Album.findById(albumID, function (err, album) {
 			if (err) throw err;
 
-			var resObj = { albumID : albumID };
 			var coverIdx = album.coverAsset;
 			var coverAsset = album.assets[coverIdx];
 
-			// If album is empty, set .coverURL to null. Let client handle it
+			// If album is empty, send null. Let client handle it
 			if (coverAsset == undefined | coverAsset == null) {
-				resObj.coverURL = null;
-				res.send(resObj);
+				res.send(null);
 				return;
 			}
 
 			if (coverAsset.thumbURL) {
-				resObj.coverURL = coverAsset.thumbURL;
-				res.send(resObj);
+				res.send(coverAsset.thumbURL);
 				return;
 			}
 			else {
 				// Get remote URL
 				var remotePaths = assetPaths(albumID, coverAsset.assetID);
 				getSignedURL(remotePaths.thumb, function (thumbURL) {
-					resObj.coverURL = thumbURL;
-					res.send(resObj);
+					res.send(thumbURL);
+					return;
 				});
 			}
 		});

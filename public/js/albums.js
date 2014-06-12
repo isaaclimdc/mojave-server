@@ -26,9 +26,7 @@ function loadUserData() {
 function loadAlbumsForUser(user) {
   var table = $('.albumsTable');
 
-  for (var i = 0; i < user.albums.length; i++) {
-    var albumID = user.albums[i];
-
+  user.albums.forEach(function (albumID) {
     var a = $('<a>');
     a.attr('href', '/albums/'+albumID);
 
@@ -43,19 +41,18 @@ function loadAlbumsForUser(user) {
     $.ajax({
       url: '/api/album/'+albumID+'/cover',
       type: 'GET',
-      success: function(data) {
+      success: function(coverURL) {
         var img = $('<img>');
-        var coverURL = data.coverURL;
-        if (coverURL == null) coverURL = 'img/phAlbumCover.png';
+        if (!coverURL) coverURL = 'img/phAlbumCover.png';
         img.attr('src', coverURL);
 
-        $('#'+data.albumID).append(img);
+        $('#'+albumID).append(img);
       },
       failure: function(err) {
         throw err;
       }
     });
-  }
+  });
 }
 
 function loadCollaboratorsForUser(user) {
@@ -66,9 +63,7 @@ function loadCollaboratorsForUser(user) {
     return fixedDivID+'-'+friendID;
   }
 
-  for (var i = 0; i < user.friends.length; i++) {
-    var friendID = user.friends[i];
-
+  user.friends.forEach(function (friendID) {
     var div = $('<div>');
     div.attr('class', 'checkbox');
 
@@ -84,7 +79,6 @@ function loadCollaboratorsForUser(user) {
       type: 'GET',
       success: function(friend) {
         var friendName = friend.firstName + ' ' + friend.lastName;
-        console.log("Friend:", friendName, friend);
 
         // <div class="checkbox">
         //   <label for="selectCollabs-0">
@@ -93,7 +87,7 @@ function loadCollaboratorsForUser(user) {
         //   </label>
         // </div>
 
-        var inputID = makeInputID(friend._id);
+        var inputID = makeInputID(friendID);
         var label = $("label[for='"+inputID+"']");
         label.text(friendName);
 
@@ -101,7 +95,7 @@ function loadCollaboratorsForUser(user) {
         input.attr({
           'type': 'checkbox',
           'id': inputID,
-          'value': friend._id
+          'value': friendID
         });
 
         label.append(input);
@@ -110,7 +104,7 @@ function loadCollaboratorsForUser(user) {
         throw err;
       }
     });
-  }
+  });
 }
 
 function createNewAlbum() {

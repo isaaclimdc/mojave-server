@@ -32,7 +32,7 @@ function submitNewImg(e) {
 function loadAlbum() {
   var table = $('.albumTable');
   var albumID = table.attr('id');
-  console.log("ALBUM ID:", albumID);
+  console.log("Loading album:", albumID);
 
   // Fetch album
   $.ajax({
@@ -43,9 +43,7 @@ function loadAlbum() {
       $('#singleAlbumTitle').text(album.title);
 
       // Load assets
-      for (var i = 0; i < album.assets.length; i++) {
-        var asset = album.assets[i];
-
+      album.assets.forEach(function (asset) {
         var div = $('<div>');
         div.attr('class', 'col-md-4 albumCell');
 
@@ -60,7 +58,7 @@ function loadAlbum() {
         a.append(img);
         div.append(a);
         table.prepend(div);
-      }
+      });
     },
     failure: function(err) {
       throw err;
