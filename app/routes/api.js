@@ -11,6 +11,7 @@ var Asset = require('../models/assetModel');
 
 var fs = require('fs');
 var im = require('imagemagick');
+var async = require('async');
 
 function apiPath(arg) { return '/api'+arg; }
 
@@ -126,9 +127,7 @@ module.exports = function(app, s3) {
 		newAlbum.save(function(err, album) {
 			if (err) throw err;
 
-			for (var i = 0; i < collabs.length; i++) {
-				var userID = collabs[i];
-
+			async.each(collabs, function (userID, callback) {
 				// Update user's album list using new albumID
 				User.findById(userID, function (err, user) {
 					if (err) throw err;
@@ -141,7 +140,10 @@ module.exports = function(app, s3) {
 			      res.send(200);
 			    });
 			  });
-			}
+			}, function (err) {
+				if (err) throw err;
+				res.send(200);  // All iterators are done, send "OK"!
+			});
 		});
 	});
 
