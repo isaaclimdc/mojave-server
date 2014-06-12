@@ -35,7 +35,7 @@ function loadAlbumsForUser(user) {
     div.attr('id', albumID);
 
     a.append(div);
-    table.append(a);
+    table.prepend(a);
 
     // Fetch album cover
     $.ajax({

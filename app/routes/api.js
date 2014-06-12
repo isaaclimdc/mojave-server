@@ -45,10 +45,10 @@ module.exports = function(app, s3) {
 	// USER ======================================================================
 
 	// Get user object with userID
-	app.get(apiPath('/user/:userID'), function(req, res) {
+	app.get(apiPath('/user/:userID'), function (req, res) {
 		User.findById(req.params.userID, function (err, user) {
 			if (err) throw err;
-			res.send(user);
+			return res.json(user);
 	  });
 	});
 
@@ -61,20 +61,14 @@ module.exports = function(app, s3) {
 		Album.findById(albumID, function (err, album) {
 			if (err) throw err;
 
-			console.log(album);
-
-			for (var i = 0; i < album.assets.length; i++) {
-				var asset = album.assets[i];
-
-				// Get remote URL
+			album.assets.forEach(function (asset) {
 				var remotePaths = assetPaths(albumID, asset.assetID);
-
 				var urls = synchGetSignedURLs(remotePaths);
 				asset.thumbURL = urls.thumb;
 				asset.fullURL = urls.full;
-			}
+			});
 
-			res.send(album);
+			return res.json(album);
 	  });
 	});
 
@@ -89,21 +83,17 @@ module.exports = function(app, s3) {
 			var coverAsset = album.assets[coverIdx];
 
 			// If album is empty, send null. Let client handle it
-			if (coverAsset == undefined | coverAsset == null) {
-				res.send(null);
-				return;
+			if (!coverAsset) {
+				return res.json(null);
 			}
 
 			if (coverAsset.thumbURL) {
-				res.send(coverAsset.thumbURL);
-				return;
+				return res.json(coverAsset.thumbURL);
 			}
 			else {
-				// Get remote URL
 				var remotePaths = assetPaths(albumID, coverAsset.assetID);
 				getSignedURL(remotePaths.thumb, function (thumbURL) {
-					res.send(thumbURL);
-					return;
+					return res.json(thumbURL);
 				});
 			}
 		});
@@ -113,26 +103,34 @@ module.exports = function(app, s3) {
 	app.post(apiPath('/album/new'), function (req, res) {
 		var currentUser = req.user;
 		var title = req.body.title;
-		var collabs = req.body.collabs;
+		var collabs = req.body.collabs ? req.body.collabs : [];
 
+		// Validate fields
+		if (title.length == 0) return res.send(400);
+		collabs.forEach(function (userID) {
+			if (!currentUser.friends.contains(userID)) return res.send(400);
+		});
+
+		// Add current user to collabs
 		collabs.unshift(currentUser._id);
 
 		// Create database entry so we have the new albumID
 		var newAlbum = new Album();
 		newAlbum.users = collabs;
 		newAlbum.assets = [];
-		newAlbum.coverAsset = 0;
+		newAlbum.coverAsset = 0;    // Default to the first asset (if exists)
 		newAlbum.title = title;
 
 		newAlbum.save(function(err, album) {
 			if (err) throw err;
 
 			async.each(collabs, function (userID, callback) {
-				// Update user's album list using new albumID
+				// Update user's album list with new albumID
 				User.findById(userID, function (err, user) {
 					if (err) throw err;
 
-					user.albums.unshift(album._id);
+					user.albums.push(album._id);   // Add to the back
+
 			    user.save(function (err, user) {
 			    	if (err) throw err;
 			    	callback();  // Means this async call is done.
@@ -140,8 +138,7 @@ module.exports = function(app, s3) {
 			  });
 			}, function (err) {
 				if (err) throw err;
-				console.log("Album added to all collaborators!");
-				res.send(200);  // All iterators are done, send "OK"!
+				return res.send(200);  // All iterators are done, send "OK"!
 			});
 		});
 	});
@@ -154,11 +151,9 @@ module.exports = function(app, s3) {
 		var albumID = req.params.albumID;
 		var fileType = getExt(fileName);
 
-		// Protect against empty form submission. Send BAD_REQUEST
-		if (!fileName) {
-			res.send(400);
-			return;
-		}
+		// Validate fields
+		// Protect against empty form submission.
+		if (!fileName) return res.send(400);
 
 		// Create database entry so we have the assetID
 		var newAsset = new Asset();
@@ -244,13 +239,11 @@ module.exports = function(app, s3) {
 	// 	var albumID = req.params.albumID;
 	// 	var assetID = req.params.assetID;
 
-	// 	// Get remote URL
-	// 	var remotePaths = assetPaths(albumID, assetID);
-
 	// 	// Get signed URLs from S3
+	// 	var remotePaths = assetPaths(albumID, assetID);
 	// 	getSignedURLs(remotePaths, function (urls) {
  //  		console.log("Image URLs are:", urls);
- //  	  res.send(urls);
+ //  	  return res.json(urls);
 	// 	});
 	// });
 
@@ -282,5 +275,15 @@ module.exports = function(app, s3) {
 		var thumbURL = synchGetSignedURL(remotePaths.thumb);
 		var fullURL = synchGetSignedURL(remotePaths.full);
 		return { thumb : thumbURL, full : fullURL };
+	}
+
+	Array.prototype.contains = function(obj) {
+    var i = this.length;
+    while (i--) {
+    	if (this[i] === obj) {
+        return true;
+      }
+    }
+    return false;
 	}
 };
