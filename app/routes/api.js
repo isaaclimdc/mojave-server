@@ -160,54 +160,58 @@ module.exports = function(app, s3) {
 		newAsset.fileType = fileType;
 		newAsset.owner = req.user._id;
 
-		newAsset.save(function (err, asset) {
-		  if (err) throw err;
+  	// Find album we're uploading to
+		Album.findById(albumID, function (err, album) {
+			if (err) throw err;
 
-		  var assetID = asset._id;
+			if (!album.collabs.contains(req.user._id)) {
+				console.log(typeof(album.collabs[0]), typeof(req.user._id));
+				return res.send(400);
+			}
 
-		  var remotePaths = assetPaths(albumID, assetID);
-		  console.log("Preparing to upload image...");
-		  console.log("Album ID:", albumID);
-		  console.log("Local path:", localPath);
-		  console.log("Remote path:", remotePaths.thumb, remotePaths.full);
+			newAsset.save(function (err, asset) {
+			  if (err) throw err;
 
-			var params = {
-  	    Bucket: BUCKET_NAME,
-  	    ContentType: 'image/jpeg',
-  	  };
+  			// Append to the album's list of assets
+  			var assetID = asset._id;
+  			album.assets.push(makeAsset(assetID, null, null));
 
-  	  // Resize image into thumbnail, save locally
-			var tmpLocalPath = localPath+'thumb';
-			im.resize({ srcPath: localPath, dstPath: tmpLocalPath, width: 200 },
-				function (err) {
-				  if (err) throw err;
+  	    album.save(function (err, album) {
+  	    	if (err) throw err;
 
-				  console.log('Resized image to width of 200px!');
+  	      console.log("Asset added to album in db!", album);
 
-				  // Read in local thumbnail image
-				  fs.readFile(tmpLocalPath, function (err, data) {
-						if (err) throw err;
+  	      // Prepare upload
+				  var remotePaths = assetPaths(albumID, assetID);
+				  // console.log("Preparing to upload image...");
+				  // console.log("Album ID:", albumID);
+				  // console.log("Local path:", localPath);
+				  // console.log("Remote path:", remotePaths.thumb, remotePaths.full);
 
-						// Send thumbnail to S3
-						params.Body = data;
-						params.Key = remotePaths.thumb;
-			  	  s3.client.putObject(params, function (err, ETag) {
-			  	  	if (err) throw err;
+					var params = {
+		  	    Bucket: BUCKET_NAME,
+		  	    ContentType: 'image/jpeg',
+		  	  };
 
-		  	    	console.log('Successfully uploaded thumbnail!');
+		  	  // Resize image into thumbnail, save locally
+					var tmpLocalPath = localPath+'thumb';
+					im.resize({ srcPath: localPath, dstPath: tmpLocalPath, width: 200 },
+						function (err) {
+						  if (err) throw err;
 
-		  	    	// Find album we're uploading to
-		    			Album.findById(albumID, function (err, album) {
-			    			if (err) throw err;
+						  console.log('Resized image to width of 200px!');
 
-			    			// Append to the album's list of assets
-			    			var asset = makeAsset(assetID, null, null);
-			    			album.assets.push(asset);
+						  // Read in local thumbnail image
+						  fs.readFile(tmpLocalPath, function (err, data) {
+								if (err) throw err;
 
-			    	    album.save(function (err, album) {
-			    	    	if (err) throw err;
+								// Send thumbnail to S3
+								params.Body = data;
+								params.Key = remotePaths.thumb;
+					  	  s3.client.putObject(params, function (err, ETag) {
+					  	  	if (err) throw err;
 
-			    	      console.log("Asset added to album in db!", album);
+				  	    	console.log('Successfully uploaded thumbnail!');
 
 			    	      // IMPORTANT: Respond "OK" before uploading full image.
 			    	      // Potential race condition here, but it's much faster this way
@@ -278,12 +282,6 @@ module.exports = function(app, s3) {
 	}
 
 	Array.prototype.contains = function(obj) {
-    var i = this.length;
-    while (i--) {
-    	if (this[i] === obj) {
-        return true;
-      }
-    }
-    return false;
+    return this.indexOf(obj) != -1;
 	}
 };
