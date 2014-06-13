@@ -184,58 +184,64 @@ module.exports = function(app, s3) {
 
   	      // Prepare upload
 				  var remotePaths = assetPaths(albumID, assetID);
-				  // console.log("Preparing to upload image...");
-				  // console.log("Album ID:", albumID);
-				  // console.log("Local path:", localPath);
-				  // console.log("Remote path:", remotePaths.thumb, remotePaths.full);
 
 					var params = {
 		  	    Bucket: BUCKET_NAME,
 		  	    ContentType: 'image/jpeg',
 		  	  };
 
-		  	  // Resize image into thumbnail, save locally
-					var tmpLocalPath = localPath+'thumb';
-					im.resize({ srcPath: localPath, dstPath: tmpLocalPath, width: 200 },
-						function (err) {
-						  if (err) return sendIntErr('Could not create image thumbnail', err, res);
+		  	  // Upload thumbnail and full image to S3 __in parallel__
+		  	  async.parallel([
+		  	  	// THUMBNAIL
+		  	  	function (callback) {
+	  		  	  // Resize image into thumbnail, save locally
+	  					var tmpLocalPath = localPath+'thumb';
+	  					im.resize({ srcPath: localPath, dstPath: tmpLocalPath, width: 200 },
+	  						function (err) {
+	  						  if (err) return sendIntErr('Could not create image thumbnail', err, res);
 
-						  console.log('Resized image to width of 200px!');
+	  						  console.log('Resized image to width of 200px!');
 
-						  // Read in local thumbnail image
-						  fs.readFile(tmpLocalPath, function (err, data) {
-								if (err) return sendIntErr('Could not read file', err, res);
+	  						  // Read in local thumbnail image
+	  						  fs.readFile(tmpLocalPath, function (err, data) {
+	  								if (err) return sendIntErr('Could not read file', err, res);
 
-								// Send thumbnail to S3
-								params.Body = data;
-								params.Key = remotePaths.thumb;
+	  								// Send thumbnail to S3
+	  								params.Body = data;
+	  								params.Key = remotePaths.thumb;
+	  					  	  s3.client.putObject(params, function (err, ETag) {
+	  					  	  	if (err) return sendIntErr('Could not upload thumbnail', err, res);
+
+	  				  	    	console.log('Successfully uploaded thumbnail!');
+	  				  	    	callback();
+  				    	    });
+  			    	  	});
+  		  	 			});
+		  	  	},
+		  	  	// FULL IMAGE
+		  	  	function (callback) {
+	    	      // In the background, upload full image to S3, don't respond.
+	    	      fs.readFile(localPath, function (err, data) {
+			  				if (err) return sendIntErr('Could not read file', err, res);
+
+			  				params.Body = data;
+			  				params.Key = remotePaths.full;
 					  	  s3.client.putObject(params, function (err, ETag) {
-					  	  	if (err) return sendIntErr('Could not upload thumbnail', err, res);
+					  	  	if (err) return sendIntErr('Could not upload image', err, res);
 
-				  	    	console.log('Successfully uploaded thumbnail!');
-
-			    	      // IMPORTANT: Respond "OK" before uploading full image.
-			    	      // Potential race condition here, but it's much faster this way
-			    	      // TODO: If the lightbox GET fails, just try again after a few seconds.
-			    	      res.send(200);
-
-			    	      // In the background, upload full image to S3, don't respond.
-			    	      fs.readFile(localPath, function (err, data) {
-					  				if (err) return sendIntErr('Could not read file', err, res);
-
-					  				params.Body = data;
-					  				params.Key = remotePaths.full;
-							  	  s3.client.putObject(params, function (err, ETag) {
-							  	  	if (err) return sendIntErr('Could not upload image', err, res);
-
-						  	    	console.log('Successfully uploaded full image!');
-					  	 			});
-					  			});
-			    	    });
-		    	  	});
-	  	 			});
-			  });
-  		});
+				  	    	console.log('Successfully uploaded full image!');
+				  	    	callback();
+			  	 			});
+			  			});
+		  	  	}
+		  	  ],
+		  	  // BOTH DONE!
+		  	  function (err, results) {
+    	      console.log('Uploaded both thumbnail and full image!');
+    	      return res.send(200);
+    	    });
+	  		});
+			});
 		});
 	});
 
