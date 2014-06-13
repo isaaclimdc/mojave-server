@@ -17,8 +17,8 @@ function loadUserData() {
       loadAlbumsForUser(user);
       loadCollaboratorsForUser(user);
     },
-    failure: function(err) {
-      throw err;
+    error: function(err) {
+      console.error("Error:", err.responseText);
     }
   });
 }
@@ -48,8 +48,8 @@ function loadAlbumsForUser(user) {
 
         $('#'+albumID).append(img);
       },
-      failure: function(err) {
-        throw err;
+      error: function(err) {
+        console.error("Error:", err.responseText);
       }
     });
   });
@@ -100,8 +100,8 @@ function loadCollaboratorsForUser(user) {
 
         label.append(input);
       },
-      failure: function(err) {
-        throw err;
+      error: function(err) {
+        console.error("Error:", err.responseText);
       }
     });
   });
@@ -126,8 +126,8 @@ function createNewAlbum() {
     success: function(data) {
       location.reload();
     },
-    failure: function(err) {
-      throw err;
+    error: function(err) {
+      console.error("Error:", err.responseText);
     }
   });
 }

@@ -23,8 +23,8 @@ function submitNewImg(e) {
     success: function(data) {
       location.reload();
     },
-    failure: function(err) {
-      throw err;
+    error: function(err) {
+      console.error("Error:", err.responseText);
     }
   });
 }
@@ -60,8 +60,8 @@ function loadAlbum() {
         table.prepend(div);
       });
     },
-    failure: function(err) {
-      throw err;
+    error: function(err) {
+      console.error("Error:", err.responseText);
     }
   });
 }

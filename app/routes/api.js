@@ -47,7 +47,7 @@ module.exports = function(app, s3) {
 	// Get user object with userID
 	app.get(apiPath('/user/:userID'), function (req, res) {
 		User.findById(req.params.userID, function (err, user) {
-			if (err) throw err;
+			if (err) return sendIntErr('User not found.', err, res);
 			return res.json(user);
 	  });
 	});
@@ -59,7 +59,7 @@ module.exports = function(app, s3) {
 		var albumID = req.params.albumID;
 
 		Album.findById(albumID, function (err, album) {
-			if (err) throw err;
+			if (err) return sendIntErr('Album not found', err, res);
 
 			async.each(album.assets, function (asset, callback) {
 				var remotePaths = assetPaths(albumID, asset.assetID);
@@ -69,7 +69,7 @@ module.exports = function(app, s3) {
 					callback();  // Means this async call is done.
 				});
 			}, function (err) {
-				if (err) throw err;
+				if (err) return sendIntErr('Could not update album assets', err, res);
 				return res.json(album);  // All iterators are done, send back album!
 			});
 	  });
@@ -80,7 +80,7 @@ module.exports = function(app, s3) {
 		var albumID = req.params.albumID;
 
 		Album.findById(albumID, function (err, album) {
-			if (err) throw err;
+			if (err) return sendIntErr('Album not found', err, res);
 
 			var coverIdx = album.coverAsset;
 			var coverAsset = album.assets[coverIdx];
@@ -109,9 +109,11 @@ module.exports = function(app, s3) {
 		var collabs = req.body.collabs ? req.body.collabs : [];
 
 		// Validate fields
-		if (title.length == 0) return res.send(400);
+		if (title.length == 0)
+			return sendBadReq('Title cannot be empty', res);
 		collabs.forEach(function (userID) {
-			if (!currentUser.friends.contains(userID)) return res.send(400);
+			if (!currentUser.friends.contains(userID))
+				return sendBadReq('You must be friends with the colloborators', res);
 		});
 
 		// Add current user to collabs
@@ -125,29 +127,29 @@ module.exports = function(app, s3) {
 		newAlbum.title = title;
 
 		newAlbum.save(function(err, album) {
-			if (err) throw err;
+			if (err) return sendIntErr('Could not save album', err, res);
 
 			async.each(collabs, function (userID, callback) {
 				// Update user's album list with new albumID
 				User.findById(userID, function (err, user) {
-					if (err) throw err;
+					if (err) return sendIntErr('User not found', err, res);
 
 					user.albums.push(album._id);   // Add to the back
 
 			    user.save(function (err, user) {
-			    	if (err) throw err;
+			    	if (err) return sendIntErr('Could not save user', err, res);
 			    	callback();  // Means this async call is done.
 			    });
 			  });
 			}, function (err) {
-				if (err) throw err;
+				if (err) return sendIntErr('Could not update collabs', err, res);
 				return res.send(200);  // All iterators are done, send "OK"!
 			});
 		});
 	});
 
 	// Upload photo
-	app.post(apiPath('/album/:albumID/upload'), function (req, res) {
+	app.post(apiPath('/album/:albumID/upload'), function (req, res, next) {
 		// Prepare file upload
 		var fileName = req.files.newImage.name;
 		var localPath = req.files.newImage.path;
@@ -156,7 +158,7 @@ module.exports = function(app, s3) {
 
 		// Validate fields
 		// Protect against empty form submission.
-		if (!fileName) return res.send(400);
+		if (!fileName) return sendBadReq('No image selected for upload', res);
 
 		// Create database entry so we have the assetID
 		var newAsset = new Asset();
@@ -165,22 +167,20 @@ module.exports = function(app, s3) {
 
   	// Find album we're uploading to
 		Album.findById(albumID, function (err, album) {
-			if (err) throw err;
+			if (err) return sendIntErr('Album not found', err, res);
 
-			// STOPPED HERE::::: Add send errors to all APIs.
-			if (!album.collabs.contains(req.user._id)) return res.send(400);
+			if (!album.collabs.contains(req.user._id))
+				return sendBadReq('You must be a colloborator to upload photos', res);
 
 			newAsset.save(function (err, asset) {
-			  if (err) throw err;
+			  if (err) return sendIntErr('Could not save asset', err, res);
 
   			// Append to the album's list of assets
   			var assetID = asset._id;
   			album.assets.push(makeAsset(assetID, null, null));
 
   	    album.save(function (err, album) {
-  	    	if (err) throw err;
-
-  	      console.log("Asset added to album in db!", album);
+  	    	if (err) return sendIntErr('Could not save album', err, res);
 
   	      // Prepare upload
 				  var remotePaths = assetPaths(albumID, assetID);
@@ -198,19 +198,19 @@ module.exports = function(app, s3) {
 					var tmpLocalPath = localPath+'thumb';
 					im.resize({ srcPath: localPath, dstPath: tmpLocalPath, width: 200 },
 						function (err) {
-						  if (err) throw err;
+						  if (err) return sendIntErr('Could not create image thumbnail', err, res);
 
 						  console.log('Resized image to width of 200px!');
 
 						  // Read in local thumbnail image
 						  fs.readFile(tmpLocalPath, function (err, data) {
-								if (err) throw err;
+								if (err) return sendIntErr('Could not read file', err, res);
 
 								// Send thumbnail to S3
 								params.Body = data;
 								params.Key = remotePaths.thumb;
 					  	  s3.client.putObject(params, function (err, ETag) {
-					  	  	if (err) throw err;
+					  	  	if (err) return sendIntErr('Could not upload thumbnail', err, res);
 
 				  	    	console.log('Successfully uploaded thumbnail!');
 
@@ -221,12 +221,12 @@ module.exports = function(app, s3) {
 
 			    	      // In the background, upload full image to S3, don't respond.
 			    	      fs.readFile(localPath, function (err, data) {
-					  				if (err) throw err;
+					  				if (err) return sendIntErr('Could not read file', err, res);
 
 					  				params.Body = data;
 					  				params.Key = remotePaths.full;
 							  	  s3.client.putObject(params, function (err, ETag) {
-							  	  	if (err) throw err;
+							  	  	if (err) return sendIntErr('Could not upload image', err, res);
 
 						  	    	console.log('Successfully uploaded full image!');
 					  	 			});
@@ -253,6 +253,15 @@ module.exports = function(app, s3) {
 	// });
 
 	// HELPERS ===================================================================
+
+	// Send an internal server error (500)
+	function sendIntErr(responseText, err, res) {
+		return res.send(400, responseText+'. '+err);
+	}
+
+	function sendBadReq(responseText, res) {
+		return res.send(500, responseText);
+	}
 
 	// TODO: Optimize by not calling .getSignedUrl every time.
 	function getSignedURL(remotePath, success) {
